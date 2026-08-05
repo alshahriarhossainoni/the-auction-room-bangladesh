@@ -1,4 +1,44 @@
-const toggle=document.querySelector('.menu-toggle');const nav=document.querySelector('.nav-links');toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',open)});document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-document.getElementById('year').textContent=new Date().getFullYear();
-fetch('market-data.json').then(r=>r.json()).then(d=>{document.getElementById('instrument').textContent=d.instrument||'GC Futures';document.getElementById('date').textContent=d.date||'Daily Outlook';document.getElementById('bias').textContent=d.bias||'Neutral';document.getElementById('callResistance').textContent=d.callResistance||'—';document.getElementById('putSupport').textContent=d.putSupport||'—';document.getElementById('gammaWall').textContent=d.gammaWall||'—';document.getElementById('hvl').textContent=d.hvl||'—';document.getElementById('weeklyOutlook').textContent=d.weeklyOutlook||'Update market-data.json';}).catch(()=>{});
+fetch("market-data.json")
+.then(response => response.json())
+.then(data => {
+
+    document.getElementById("instrument").textContent = data.instrument;
+    document.getElementById("date").textContent = data.date;
+
+    document.getElementById("callResistance").textContent = data.callResistance;
+    document.getElementById("putSupport").textContent = data.putSupport;
+    document.getElementById("gammaWall").textContent = data.gammaWall;
+    document.getElementById("hvl").textContent = data.hvl;
+
+    document.getElementById("weeklyOutlook").textContent = data.weeklyOutlook;
+
+    const bias = document.getElementById("bias");
+
+    bias.textContent = data.bias;
+
+    bias.classList.remove(
+        "positive",
+        "negative",
+        "neutral",
+        "flip"
+    );
+
+    switch(data.bias.toLowerCase()){
+
+        case "positive gamma":
+            bias.classList.add("positive");
+            break;
+
+        case "negative gamma":
+            bias.classList.add("negative");
+            break;
+
+        case "gamma flip":
+            bias.classList.add("flip");
+            break;
+
+        default:
+            bias.classList.add("neutral");
+    }
+
+});
