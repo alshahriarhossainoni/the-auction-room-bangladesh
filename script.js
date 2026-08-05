@@ -1,24 +1,4 @@
-const menuButton = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.nav-links');
-
-menuButton.addEventListener('click', () => {
-  const isOpen = nav.classList.toggle('open');
-  menuButton.setAttribute('aria-expanded', String(isOpen));
-});
-
-document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', () => {
-    nav.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
-  });
-});
-
-document.getElementById('year').textContent = new Date().getFullYear();
-
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+const toggle=document.querySelector('.menu-toggle');const nav=document.querySelector('.nav-links');toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',open)});document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.getElementById('year').textContent=new Date().getFullYear();
+fetch('market-data.json').then(r=>r.json()).then(d=>{document.getElementById('instrument').textContent=d.instrument||'GC Futures';document.getElementById('date').textContent=d.date||'Daily Outlook';document.getElementById('bias').textContent=d.bias||'Neutral';document.getElementById('callResistance').textContent=d.callResistance||'—';document.getElementById('putSupport').textContent=d.putSupport||'—';document.getElementById('gammaWall').textContent=d.gammaWall||'—';document.getElementById('hvl').textContent=d.hvl||'—';document.getElementById('weeklyOutlook').textContent=d.weeklyOutlook||'Update market-data.json';}).catch(()=>{});
