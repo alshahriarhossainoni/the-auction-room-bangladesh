@@ -1,10 +1,12 @@
 {
   "instrument": "GC Futures",
-  "date": "August 4, 2026",
-  "bias": "Neutral",
-  "callResistance": "4250",
-  "putSupport": "4000",
-  "gammaWall": "4250",
-  "hvl": "4075",
-  "weeklyOutlook": "Price is trading between major support and call resistance. Wait for acceptance or rejection before forming an execution plan."
+  "date": "August 5, 2026",
+
+  "bias": "Positive Gamma",
+
+  "callResistance": "4750",
+  "putSupport": "3900",
+  
+
+  "weeklyOutlook": "Price is expected to remain mean reverting unless acceptance above Call Resistance or below Put Support occurs."
 }
