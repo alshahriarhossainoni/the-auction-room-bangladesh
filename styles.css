@@ -202,20 +202,23 @@ body{
 
 .hero-visual{
   position:relative;
-  min-height:610px;
+  min-height:auto;
   display:flex;
-  align-items:flex-start;
-  justify-content:flex-end;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+  gap:24px;
 }
 .portrait-wrap{
   position:relative;
   width:78%;
-  height:565px;
+  height:500px;
   overflow:hidden;
   border:1px solid var(--line);
   border-radius:28px;
   background:#020202;
   box-shadow:0 45px 110px rgba(0,0,0,.55);
+  flex:none;
 }
 .portrait-wrap img{
   width:100%;
@@ -248,17 +251,19 @@ body{
 }
 
 .market-card{
-  position:absolute;
-  left:0;
-  bottom:22px;
+  position:relative;
+  left:auto;
+  right:auto;
+  bottom:auto;
   z-index:5;
-  width:68%;
+  width:78%;
   overflow:hidden;
   border:1px solid var(--line);
   border-radius:18px;
-  background:rgba(10,9,7,.94);
+  background:rgba(10,9,7,.96);
   backdrop-filter:blur(12px);
   box-shadow:0 28px 80px rgba(0,0,0,.55);
+  flex:none;
 }
 .market-card-head,.market-card-foot{
   display:flex;
@@ -536,9 +541,9 @@ footer{
   .nav-links.open{display:flex}
   .nav-links .nav-cta{padding:0;border:0}
   .hero{grid-template-columns:1fr;gap:55px;padding-top:70px}
-  .hero-visual{min-height:670px}
-  .portrait-wrap{width:78%}
-  .market-card{width:61%}
+  .hero-visual{min-height:auto;align-items:center;gap:20px}
+  .portrait-wrap{width:88%;height:520px}
+  .market-card{width:88%}
   .feature-grid{grid-template-columns:1fr}
   .founder-section{grid-template-columns:1fr}
   .terminal-grid{grid-template-columns:1fr 1fr}
@@ -555,9 +560,9 @@ footer{
   .hero-actions{flex-direction:column}
   .btn{width:100%}
   .trust-row{grid-template-columns:1fr 1fr}
-  .hero-visual{min-height:auto;display:flex;flex-direction:column;gap:18px}
-  .portrait-wrap{width:100%;height:470px}
-  .market-card{position:relative;left:auto;bottom:auto;width:100%}
+  .hero-visual{min-height:auto;align-items:center;gap:18px}
+  .portrait-wrap{width:100%;height:450px}
+  .market-card{position:relative;left:auto;right:auto;bottom:auto;width:100%}
   .market-card-foot{display:none}
   .credibility-strip{justify-content:flex-start}
   .section{padding:78px 0}
