@@ -1752,3 +1752,30 @@ html[lang="bn"] .auth-message{
 .member-pill{
   text-transform:capitalize;
 }
+
+
+/* =========================================================
+   DASHBOARD NAVIGATION FIX
+   ========================================================= */
+.dashboard-anchor,
+#overview{
+  scroll-margin-top:34px;
+}
+
+.dashboard-nav a{
+  cursor:pointer;
+  user-select:none;
+}
+
+.dashboard-nav a.active{
+  color:var(--gold2);
+  background:rgba(217,178,76,.08);
+  border:1px solid rgba(217,178,76,.18);
+}
+
+@media(max-width:980px){
+  .dashboard-anchor,
+  #overview{
+    scroll-margin-top:18px;
+  }
+}

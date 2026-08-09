@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=12">
+<link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body class="account-dashboard-page">
   <div class="dashboard-wrap">
@@ -35,7 +35,7 @@
     </aside>
 
     <main class="dashboard-main">
-      <section class="dashboard-topbar">
+      <section class="dashboard-topbar" id="overview">
         <div>
           <p class="eyebrow">Member Dashboard</p>
           <h1>Welcome back, <span id="dashboardName">Trader</span>.</h1>
@@ -44,8 +44,8 @@
         <div class="member-pill" id="memberPill">Loading Role…</div>
       </section>
 
-      <section class="dashboard-grid" id="overview">
-        <article class="dashboard-card dashboard-profile-card">
+      <section class="dashboard-grid">
+        <article class="dashboard-card dashboard-profile-card dashboard-anchor" id="account-info">
           <div class="card-heading">
             <span>Profile</span>
             <strong>Account Information</strong>
@@ -71,7 +71,7 @@
           </div>
         </article>
 
-        <article class="dashboard-card" id="access">
+        <article class="dashboard-card dashboard-anchor" id="access">
           <div class="card-heading">
             <span>Education</span>
             <strong>Course Access</strong>
@@ -92,7 +92,7 @@
           </div>
         </article>
 
-        <article class="dashboard-card" id="copy">
+        <article class="dashboard-card dashboard-anchor" id="copy">
           <div class="card-heading">
             <span>Trading Access</span>
             <strong>Copy Trading</strong>
@@ -110,7 +110,7 @@
         </article>
       </section>
 
-      <section class="dashboard-card dashboard-wide" id="profile">
+      <section class="dashboard-card dashboard-wide dashboard-anchor" id="profile">
         <div class="card-heading">
           <span>Account</span>
           <strong>Profile & Security</strong>
@@ -141,6 +141,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="account.js?v=3"></script>
+<script src="account.js?v=4"></script>
 </body>
 </html>

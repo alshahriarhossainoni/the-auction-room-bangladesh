@@ -115,3 +115,62 @@ document.addEventListener("DOMContentLoaded", async () => {
     })[ch]);
   }
 });
+
+
+// Dashboard sidebar navigation
+document.addEventListener("DOMContentLoaded", () => {
+  const links = [...document.querySelectorAll(".dashboard-nav a[href^='#']")];
+
+  links.forEach(link => {
+    link.addEventListener("click", (e) => {
+      const id = link.getAttribute("href");
+      const target = document.querySelector(id);
+      if (!target) return;
+
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      links.forEach(item => item.classList.remove("active"));
+      link.classList.add("active");
+
+      // Keep the URL hash in sync without jumping.
+      history.replaceState(null, "", id);
+    });
+  });
+
+  // Highlight menu item while scrolling.
+  const map = {
+    overview: links.find(a => a.getAttribute("href") === "#overview"),
+    access: links.find(a => a.getAttribute("href") === "#access"),
+    copy: links.find(a => a.getAttribute("href") === "#copy"),
+    profile: links.find(a => a.getAttribute("href") === "#profile")
+  };
+
+  const sections = ["overview", "access", "copy", "profile"]
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+    if (!visible) return;
+    links.forEach(item => item.classList.remove("active"));
+    map[visible.target.id]?.classList.add("active");
+  }, {
+    root: null,
+    rootMargin: "-18% 0px -62% 0px",
+    threshold: [0, .2, .5]
+  });
+
+  sections.forEach(section => observer.observe(section));
+
+  // If page opens with a hash, scroll to the target after render.
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target) {
+      setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+    }
+  }
+});
