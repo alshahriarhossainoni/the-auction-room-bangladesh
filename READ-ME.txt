@@ -1,0 +1,12 @@
+TAR Social Logo Update
+
+Upload ONLY these two files to your GitHub repository root:
+1. index.html
+2. styles.css
+
+Replace the existing files and Commit changes.
+Wait 1–2 minutes, then hard refresh (Command + Shift + R).
+
+The social links remain:
+Telegram, Messenger, YouTube, Facebook, Gmail.
+The icons are embedded directly in index.html, so no extra icon/image files are required.
