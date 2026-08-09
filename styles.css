@@ -580,6 +580,167 @@ footer{
 
 
 /* =========================================================
+   TAR SOCIAL CONTACT CARDS
+   ========================================================= */
+
+.contact-card{
+  position:relative;
+  overflow:hidden;
+  align-items:center !important;
+  min-height:84px;
+}
+
+.contact-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity .25s ease;
+  pointer-events:none;
+}
+
+.contact-card:hover::before{opacity:1}
+
+.contact-left{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  min-width:0;
+  position:relative;
+  z-index:1;
+}
+
+.contact-left > div{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.social-icon{
+  width:46px;
+  height:46px;
+  flex:0 0 46px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.social-icon svg{
+  width:23px;
+  height:23px;
+  fill:currentColor;
+}
+
+.social-name{
+  color:var(--text) !important;
+  font-weight:700;
+  font-size:.92rem;
+}
+
+.contact-left small{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:.68rem;
+  letter-spacing:.03em;
+}
+
+.contact-card > strong{
+  position:relative;
+  z-index:1;
+  white-space:nowrap;
+}
+
+.contact-card.telegram .social-icon{color:#2AABEE}
+.contact-card.messenger .social-icon{color:#A970FF}
+.contact-card.youtube .social-icon{color:#FF3B30}
+.contact-card.facebook .social-icon{color:#4C8DFF}
+.contact-card.gmail .social-icon{color:#EA5A55}
+
+.contact-card.telegram::before{
+  background:linear-gradient(90deg,rgba(42,171,238,.08),transparent 42%);
+}
+.contact-card.messenger::before{
+  background:linear-gradient(90deg,rgba(169,112,255,.08),transparent 42%);
+}
+.contact-card.youtube::before{
+  background:linear-gradient(90deg,rgba(255,59,48,.08),transparent 42%);
+}
+.contact-card.facebook::before{
+  background:linear-gradient(90deg,rgba(76,141,255,.08),transparent 42%);
+}
+.contact-card.gmail::before{
+  background:linear-gradient(90deg,rgba(234,90,85,.08),transparent 42%);
+}
+
+@media(max-width:600px){
+  .contact-card{
+    flex-direction:row !important;
+    align-items:center !important;
+  }
+
+  .contact-card > strong{
+    margin-left:auto;
+    font-size:.78rem;
+  }
+
+  .social-icon{
+    width:42px;
+    height:42px;
+    flex-basis:42px;
+  }
+
+  .email-card{
+    align-items:flex-start !important;
+  }
+
+  .email-card > strong{
+    white-space:normal;
+    overflow-wrap:anywhere;
+    text-align:right;
+    max-width:54%;
+  }
+}
+
+
+/* Real brand logo images */
+.social-icon{
+  overflow:hidden;
+  background:#fff;
+}
+
+.social-icon img{
+  width:78%;
+  height:78%;
+  object-fit:contain;
+  display:block;
+  border-radius:8px;
+}
+
+.contact-card.facebook .social-icon img,
+.contact-card.messenger .social-icon img,
+.contact-card.telegram .social-icon img{
+  width:88%;
+  height:88%;
+  border-radius:50%;
+}
+
+.contact-card.youtube .social-icon img{
+  width:88%;
+  height:74%;
+  border-radius:8px;
+}
+
+.contact-card.gmail .social-icon img{
+  width:88%;
+  height:88%;
+  border-radius:7px;
+}
+
+
+/* =========================================================
    COPY TRADING SECTION
    ========================================================= */
 
@@ -602,9 +763,7 @@ footer{
   box-shadow:0 30px 90px rgba(0,0,0,.28);
 }
 
-.copy-copy{
-  padding:18px 16px 18px 8px;
-}
+.copy-copy{padding:18px 16px 18px 8px}
 
 .copy-copy h2{
   margin:18px 0 20px;
@@ -652,6 +811,56 @@ footer{
   margin:0;
   color:var(--muted);
   font-size:.84rem;
+}
+
+.invite-code-box{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin:24px 0 4px;
+  padding:16px 18px;
+  border:1px solid rgba(217,178,76,.34);
+  border-radius:14px;
+  background:rgba(217,178,76,.055);
+}
+
+.invite-code-box > div{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.invite-code-box span{
+  color:var(--muted);
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+
+.invite-code-box strong{
+  color:var(--gold2);
+  font-family:"Space Grotesk",sans-serif;
+  font-size:1.15rem;
+  letter-spacing:.06em;
+}
+
+.copy-code-btn{
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:rgba(255,255,255,.02);
+  color:var(--text);
+  padding:10px 14px;
+  font:inherit;
+  font-size:.78rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.copy-code-btn:hover{
+  border-color:rgba(243,215,123,.55);
+  color:var(--gold2);
 }
 
 .copy-actions{
@@ -704,9 +913,7 @@ footer{
   border-bottom:1px solid var(--line);
 }
 
-.copy-metrics div:nth-child(2n){
-  border-right:0;
-}
+.copy-metrics div:nth-child(2n){border-right:0}
 
 .copy-metrics span{
   display:block;
@@ -743,106 +950,18 @@ footer{
 }
 
 @media(max-width:920px){
-  .copy-shell{
-    grid-template-columns:1fr;
-  }
-
-  .copy-copy{
-    padding:8px 2px;
-  }
+  .copy-shell{grid-template-columns:1fr}
+  .copy-copy{padding:8px 2px}
 }
 
 @media(max-width:600px){
-  .copy-section{
-    padding-top:60px;
-    padding-bottom:60px;
-  }
-
-  .copy-shell{
-    padding:20px;
-    border-radius:20px;
-  }
-
-  .copy-copy h2{
-    font-size:2.65rem;
-  }
-
-  .copy-actions{
-    flex-direction:column;
-  }
-
-  .copy-actions .btn{
-    width:100%;
-  }
-
-  .copy-metrics{
-    grid-template-columns:1fr;
-  }
-
-  .copy-metrics div{
-    border-right:0;
-  }
-}
-
-
-/* GTCFX Invite Code */
-.invite-code-box{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  margin:24px 0 4px;
-  padding:16px 18px;
-  border:1px solid rgba(217,178,76,.34);
-  border-radius:14px;
-  background:rgba(217,178,76,.055);
-}
-
-.invite-code-box > div{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-
-.invite-code-box span{
-  color:var(--muted);
-  font-size:.68rem;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-}
-
-.invite-code-box strong{
-  color:var(--gold2);
-  font-family:"Space Grotesk",sans-serif;
-  font-size:1.15rem;
-  letter-spacing:.06em;
-}
-
-.copy-code-btn{
-  border:1px solid var(--line);
-  border-radius:9px;
-  background:rgba(255,255,255,.02);
-  color:var(--text);
-  padding:10px 14px;
-  font:inherit;
-  font-size:.78rem;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s ease;
-}
-
-.copy-code-btn:hover{
-  border-color:rgba(243,215,123,.55);
-  color:var(--gold2);
-}
-
-@media(max-width:600px){
-  .invite-code-box{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .copy-code-btn{
-    width:100%;
-  }
+  .copy-section{padding-top:60px;padding-bottom:60px}
+  .copy-shell{padding:20px;border-radius:20px}
+  .copy-copy h2{font-size:2.65rem}
+  .invite-code-box{align-items:flex-start;flex-direction:column}
+  .copy-code-btn{width:100%}
+  .copy-actions{flex-direction:column}
+  .copy-actions .btn{width:100%}
+  .copy-metrics{grid-template-columns:1fr}
+  .copy-metrics div{border-right:0}
 }
