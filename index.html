@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 
 <body>
@@ -46,22 +46,34 @@
       <a href="#terminal">Terminal</a>
       <a href="#copy-trading">Copy Trading</a>
       <a href="#founder">Founder</a>
-      <a class="nav-cta" href="#contact">Join Community</a>
+      <a class="nav-cta" href="#contact" data-i18n="joinCommunity">Join Community</a>
+
+      <div class="nav-tools">
+        <div class="language-switcher">
+          <button class="language-button" id="languageButton" type="button" aria-haspopup="true" aria-expanded="false">🌐 EN⌄</button>
+          <div class="language-menu" id="languageMenu" role="menu">
+            <button type="button" data-language="en"><span>English</span><small>English</small></button>
+            <button type="button" data-language="bn"><span>বাংলা</span><small>Bangla</small></button>
+          </div>
+        </div>
+        <a class="auth-link login-link" href="login.html" data-i18n="login">Log In</a>
+        <a class="auth-link signup-link" href="signup.html" data-i18n="signup">Sign Up</a>
+      </div>
     </nav>
   </header>
 
   <main>
     <section class="hero" id="home">
       <div class="hero-copy reveal">
-        <p class="eyebrow">Auction Market Theory • Order Flow • Options Context</p>
-        <h1>Read the market.<br><span>Not the noise.</span></h1>
+        <p class="eyebrow" data-i18n="heroEyebrow">Auction Market Theory • Order Flow • Options Context</p>
+        <h1><span data-i18n="heroLine1">Read the market.</span><br><span data-i18n="heroLine2">Not the noise.</span></h1>
         <p class="hero-text">
-          A structured market education platform for Bangla-speaking traders who want to understand auction behavior, real participation and professional execution.
+          <span data-i18n="heroText">A structured market education platform for Bangla-speaking traders who want to understand auction behavior, real participation and professional execution.</span>
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="courses.html">Start Free Course</a>
-          <a class="btn btn-secondary" href="premium.html">Explore Premium Batch</a>
+          <a class="btn btn-primary" href="courses.html" data-i18n="startFreeCourse">Start Free Course</a>
+          <a class="btn btn-secondary" href="premium.html" data-i18n="explorePremium">Explore Premium Batch</a>
         </div>
 
         <div class="trust-row">
@@ -116,8 +128,8 @@
 
     <section class="section" id="about">
       <div class="section-heading reveal">
-        <p class="eyebrow">Our Mission</p>
-        <h2>Professional market education, built for Bangla-speaking traders.</h2>
+        <p class="eyebrow" data-i18n="ourMission">Our Mission</p>
+        <h2 data-i18n="missionTitle">Professional market education, built for Bangla-speaking traders.</h2>
         <p>Move beyond prediction-based thinking and learn how markets facilitate trade through value, participation and auction structure.</p>
       </div>
 
@@ -144,8 +156,8 @@
 
     <section class="section paths-section">
       <div class="section-heading reveal">
-        <p class="eyebrow">Learning Paths</p>
-        <h2>Start free. Advance with structured mentorship.</h2>
+        <p class="eyebrow" data-i18n="learningPaths">Learning Paths</p>
+        <h2 data-i18n="learningTitle">Start free. Advance with structured mentorship.</h2>
       </div>
 
       <div class="path-grid">
@@ -307,8 +319,8 @@
 
     <section class="community-section" id="contact">
       <div class="community-copy reveal">
-        <p class="eyebrow">Official Community</p>
-        <h2>Learn, discuss and grow with TAR Bangladesh.</h2>
+        <p class="eyebrow" data-i18n="officialCommunity">Official Community</p>
+        <h2 data-i18n="communityTitle">Learn, discuss and grow with TAR Bangladesh.</h2>
         <p>Join the official channels for class updates, market education and community discussions.</p>
       </div>
 
@@ -397,6 +409,11 @@
       }, 1800);
     });
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="language.js"></script>
+  <script src="auth-state.js"></script>
 
 </body>
 </html>
