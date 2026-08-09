@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=11" />
+  <link rel="stylesheet" href="styles.css?v=14" />
 </head>
 
 <body>
@@ -370,7 +370,77 @@
     </section>
   </main>
 
-  <footer>
+  
+  <section class="faq-section" id="faq">
+    <div class="section-wrap faq-wrap">
+      <p class="eyebrow">Frequently Asked Questions</p>
+      <div class="faq-heading-row">
+        <div>
+          <h2>Common questions.<br><span>Clear answers.</span></h2>
+          <p>Learn more about TAR Bangladesh, our education model, premium mentorship and copy trading access.</p>
+        </div>
+        <a class="btn secondary" href="premium.html">Explore Premium ↗</a>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>What is The Auction Room Bangladesh?</summary>
+          <div class="faq-answer">
+            TAR Bangladesh is a structured trading education platform focused on Auction Market Theory, Market Profile, Order Flow and Options Context for Bangla-speaking traders.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is the free AMT course really free?</summary>
+          <div class="faq-answer">
+            Yes. Our free AMT course series is designed to help traders build a professional foundation before deciding whether advanced mentorship is suitable for them.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What will I learn in the Premium Batch?</summary>
+          <div class="faq-answer">
+            The Premium Batch covers Market Profile, Auction Market Theory, Footprint and Order Flow, DOM and liquidity, CVD and delta, options flow and gamma, execution models, risk management, psychology and live market analysis.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you provide live market analysis?</summary>
+          <div class="faq-answer">
+            Premium members may receive structured live market sessions, educational trade reviews, Q&A support and market breakdowns based on the program schedule.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Does TAR Bangladesh guarantee trading profit?</summary>
+          <div class="faq-answer">
+            No. Trading involves substantial risk and no educational program, mentor or strategy can guarantee profits. TAR Bangladesh focuses on education, process, risk management and professional market understanding.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>How does Premium access work?</summary>
+          <div class="faq-answer">
+            Premium access is account-based. Approved users can receive Premium status through the member dashboard and access content according to their assigned permissions.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>How does Copy Trading access work?</summary>
+          <div class="faq-answer">
+            Copy Trading access is managed separately from educational access. Eligible members can view their copy-trading access status from the member dashboard.
+          </div>
+        </details>
+      </div>
+
+      <div class="faq-actions">
+        <a class="btn primary" href="signup.html">Create Account ↗</a>
+        <a class="btn secondary" href="#contact">Join Community ↗</a>
+      </div>
+    </div>
+  </section>
+
+<footer>
     <div class="footer-brand">
       <img src="logo.jpg" alt="TAR logo" />
       <div>
@@ -413,7 +483,42 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="language.js"></script>
-  <script src="auth-state.js"></script>
+  
+  <footer class="pro-footer">
+    <div class="section-wrap">
+      <div class="pro-footer-top">
+        <div class="pro-footer-brand">
+          <img src="logo.jpg" alt="The Auction Room Bangladesh logo">
+          <div>
+            <strong>The Auction Room Bangladesh</strong>
+            <span>Auction • Order Flow • Smart Money</span>
+          </div>
+        </div>
+
+        <div class="pro-footer-links">
+          <a href="#about">About</a>
+          <a href="courses.html">Free Course</a>
+          <a href="premium.html">Premium</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <p class="pro-footer-copy">
+        The Auction Room Bangladesh provides educational content for market learning and skill development. Nothing on this website constitutes financial advice, investment advice or a guarantee of future trading performance.
+      </p>
+
+      <div class="pro-footer-bottom">
+        <span>© 2026 The Auction Room Bangladesh. All rights reserved.</span>
+        <div>
+          <a href="mailto:theauctionroombangladesh@gmail.com">Email</a>
+          <a href="#contact">Official Community</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script src="auth-state.js"></script>
 
 </body>
 </html>
