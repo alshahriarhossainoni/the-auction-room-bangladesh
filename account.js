@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  const { data } = await client.auth.getSession();
-  const session = data?.session;
+  const { data: sessionData } = await client.auth.getSession();
+  const session = sessionData?.session;
   const user = session?.user;
 
   if (!user) {
@@ -23,12 +23,75 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("dashboardName").textContent = fullName;
   status.textContent = "Your authenticated TAR Bangladesh member area.";
 
+  // Load role/access flags from public.profiles.
+  const { data: profile, error: profileError } = await client
+    .from("profiles")
+    .select("role, free_course, premium_access, copy_trading_access")
+    .eq("id", user.id)
+    .single();
+
+  const role = profile?.role || "member";
+  const freeAccess = profile?.free_course ?? true;
+  const premiumAccess = profile?.premium_access ?? false;
+  const copyAccess = profile?.copy_trading_access ?? false;
+
+  const roleLabel = {
+    member: "Member",
+    premium: "Premium Member",
+    staff: "Staff",
+    admin: "Administrator"
+  }[role] || "Member";
+
   document.getElementById("accountDetails").innerHTML = `
     <div><span>Name</span><strong>${escapeHtml(fullName)}</strong></div>
     <div><span>Email</span><strong>${escapeHtml(email)}</strong></div>
-    <div><span>Status</span><strong>Authenticated</strong></div>
+    <div><span>Role</span><strong>${escapeHtml(roleLabel)}</strong></div>
   `;
 
+  const pill = document.getElementById("memberPill");
+  pill.textContent = roleLabel;
+  pill.classList.remove("pending");
+
+  const studentStatus = document.getElementById("studentStatus");
+  studentStatus.textContent = roleLabel;
+
+  if (profileError) {
+    studentStatus.textContent = "Member";
+    console.warn("Could not load profile access:", profileError.message);
+  }
+
+  // Free course access
+  const freeStatus = document.getElementById("freeCourseStatus");
+  const freeLink = document.getElementById("freeCourseLink");
+  freeStatus.textContent = freeAccess ? "Available" : "Restricted";
+  freeStatus.className = freeAccess ? "access-open" : "access-pending";
+  if (!freeAccess) {
+    freeLink.textContent = "Access Restricted";
+    freeLink.removeAttribute("href");
+    freeLink.classList.add("disabled-link");
+  }
+
+  // Premium access
+  const premiumStatus = document.getElementById("premiumStatus");
+  const premiumLink = document.getElementById("premiumLink");
+  premiumStatus.textContent = premiumAccess ? "Premium Access Active" : "Application Based";
+  premiumStatus.className = premiumAccess ? "access-open" : "access-pending";
+  premiumLink.textContent = premiumAccess ? "Open Premium ↗" : "View Premium ↗";
+  premiumLink.href = "premium.html";
+
+  // Copy trading access
+  const copyLink = document.getElementById("copyTradingLink");
+  if (copyAccess) {
+    copyLink.textContent = "Open GTCFX Account ↗";
+    copyLink.classList.remove("restricted");
+  } else {
+    copyLink.textContent = "Copy Trading Access Pending";
+    copyLink.removeAttribute("href");
+    copyLink.removeAttribute("target");
+    copyLink.classList.add("restricted");
+  }
+
+  // Security/profile details
   document.getElementById("emailVerification").textContent =
     user.email_confirmed_at ? "Verified" : "Pending";
 
@@ -37,10 +100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("joinedDate").textContent =
     joined ? joined.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"numeric" }) : "—";
-
-  const pill = document.getElementById("memberPill");
-  pill.textContent = user.email_confirmed_at ? "Verified Member" : "Email Pending";
-  if (!user.email_confirmed_at) pill.classList.add("pending");
 
   const logout = async () => {
     await client.auth.signOut();

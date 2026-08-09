@@ -1736,3 +1736,19 @@ html[lang="bn"] .auth-message{
     text-align:left;
   }
 }
+
+
+/* =========================================================
+   ROLE-BASED ACCESS UI
+   ========================================================= */
+.disabled-link,
+.dashboard-btn.restricted{
+  opacity:.5;
+  pointer-events:none;
+  cursor:not-allowed;
+  filter:grayscale(.35);
+}
+
+.member-pill{
+  text-transform:capitalize;
+}

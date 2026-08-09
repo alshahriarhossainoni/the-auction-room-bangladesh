@@ -41,7 +41,7 @@
           <h1>Welcome back, <span id="dashboardName">Trader</span>.</h1>
           <p id="accountStatus">Checking your session…</p>
         </div>
-        <div class="member-pill" id="memberPill">Verified Member</div>
+        <div class="member-pill" id="memberPill">Loading Role…</div>
       </section>
 
       <section class="dashboard-grid" id="overview">
@@ -53,7 +53,7 @@
           <div class="profile-list" id="accountDetails">
             <div><span>Name</span><strong>Loading…</strong></div>
             <div><span>Email</span><strong>Loading…</strong></div>
-            <div><span>Status</span><strong>Authenticated</strong></div>
+            <div><span>Status</span><strong id="profileRole">Authenticated</strong></div>
           </div>
         </article>
 
@@ -65,7 +65,7 @@
           <div class="status-block">
             <span class="status-dot"></span>
             <div>
-              <strong id="studentStatus">Registered Member</strong>
+              <strong id="studentStatus">Loading access…</strong>
               <p>Your TAR account is active and authenticated.</p>
             </div>
           </div>
@@ -79,16 +79,16 @@
           <div class="access-row">
             <div>
               <span>Free AMT Course</span>
-              <strong class="access-open">Available</strong>
+              <strong class="access-open" id="freeCourseStatus">Checking…</strong>
             </div>
-            <a href="courses.html">Open Course ↗</a>
+            <a id="freeCourseLink" href="courses.html">Open Course ↗</a>
           </div>
           <div class="access-row">
             <div>
               <span>Premium Batch</span>
-              <strong class="access-pending">Application Based</strong>
+              <strong class="access-pending" id="premiumStatus">Checking…</strong>
             </div>
-            <a href="premium.html">View Premium ↗</a>
+            <a id="premiumLink" href="premium.html">View Premium ↗</a>
           </div>
         </article>
 
@@ -104,7 +104,7 @@
             <span>Invite Code</span>
             <strong>t96SW2St</strong>
           </div>
-          <a class="dashboard-btn" href="https://web.mygtc.app/login/register?ref=t96SW2St" target="_blank" rel="noopener noreferrer">
+          <a class="dashboard-btn" id="copyTradingLink" href="https://web.mygtc.app/login/register?ref=t96SW2St" target="_blank" rel="noopener noreferrer">
             Open GTCFX Account ↗
           </a>
         </article>
@@ -141,6 +141,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="account.js?v=2"></script>
+<script src="account.js?v=3"></script>
 </body>
 </html>
