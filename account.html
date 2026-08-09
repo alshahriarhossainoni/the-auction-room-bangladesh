@@ -7,25 +7,140 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=11">
+<link rel="stylesheet" href="styles.css?v=12">
 </head>
-<body class="auth-page">
+<body class="account-dashboard-page">
+  <div class="dashboard-wrap">
 
-<div class="auth-shell">
-  <aside class="auth-brand-panel">
-    <img src="logo.jpg" alt="TAR Bangladesh">
-    <h1>My Account.</h1>
-    <p>Your authenticated TAR Bangladesh member area.</p>
-    <a class="back-home" href="index.html">← Back to Home</a>
-  </aside>
-  <main class="auth-form-panel">
-    <h2>Account</h2>
-    <p class="auth-subtitle" id="accountStatus">Checking your session…</p>
-    <div id="accountDetails"></div>
-    <button class="auth-submit" id="accountLogout" type="button" style="margin-top:24px">Log Out</button>
-  </main>
-</div>
+    <aside class="dashboard-sidebar">
+      <a class="dashboard-brand" href="index.html">
+        <img src="logo.jpg" alt="TAR Bangladesh logo">
+        <div>
+          <strong>The Auction Room</strong>
+          <span>Bangladesh</span>
+        </div>
+      </a>
+
+      <nav class="dashboard-nav">
+        <a class="active" href="#overview">Overview</a>
+        <a href="#access">Course Access</a>
+        <a href="#copy">Copy Trading</a>
+        <a href="#profile">Profile</a>
+      </nav>
+
+      <div class="dashboard-sidebar-footer">
+        <a href="index.html">← Back to Home</a>
+        <button id="accountLogoutSide" type="button">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="dashboard-topbar">
+        <div>
+          <p class="eyebrow">Member Dashboard</p>
+          <h1>Welcome back, <span id="dashboardName">Trader</span>.</h1>
+          <p id="accountStatus">Checking your session…</p>
+        </div>
+        <div class="member-pill" id="memberPill">Verified Member</div>
+      </section>
+
+      <section class="dashboard-grid" id="overview">
+        <article class="dashboard-card dashboard-profile-card">
+          <div class="card-heading">
+            <span>Profile</span>
+            <strong>Account Information</strong>
+          </div>
+          <div class="profile-list" id="accountDetails">
+            <div><span>Name</span><strong>Loading…</strong></div>
+            <div><span>Email</span><strong>Loading…</strong></div>
+            <div><span>Status</span><strong>Authenticated</strong></div>
+          </div>
+        </article>
+
+        <article class="dashboard-card">
+          <div class="card-heading">
+            <span>Membership</span>
+            <strong>Student Access</strong>
+          </div>
+          <div class="status-block">
+            <span class="status-dot"></span>
+            <div>
+              <strong id="studentStatus">Registered Member</strong>
+              <p>Your TAR account is active and authenticated.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="dashboard-card" id="access">
+          <div class="card-heading">
+            <span>Education</span>
+            <strong>Course Access</strong>
+          </div>
+          <div class="access-row">
+            <div>
+              <span>Free AMT Course</span>
+              <strong class="access-open">Available</strong>
+            </div>
+            <a href="courses.html">Open Course ↗</a>
+          </div>
+          <div class="access-row">
+            <div>
+              <span>Premium Batch</span>
+              <strong class="access-pending">Application Based</strong>
+            </div>
+            <a href="premium.html">View Premium ↗</a>
+          </div>
+        </article>
+
+        <article class="dashboard-card" id="copy">
+          <div class="card-heading">
+            <span>Trading Access</span>
+            <strong>Copy Trading</strong>
+          </div>
+          <p class="dashboard-copy">
+            Follow TAR through supported GTCFX copy-trading infrastructure.
+          </p>
+          <div class="invite-mini">
+            <span>Invite Code</span>
+            <strong>t96SW2St</strong>
+          </div>
+          <a class="dashboard-btn" href="https://web.mygtc.app/login/register?ref=t96SW2St" target="_blank" rel="noopener noreferrer">
+            Open GTCFX Account ↗
+          </a>
+        </article>
+      </section>
+
+      <section class="dashboard-card dashboard-wide" id="profile">
+        <div class="card-heading">
+          <span>Account</span>
+          <strong>Profile & Security</strong>
+        </div>
+        <div class="security-grid">
+          <div>
+            <span>Email Verification</span>
+            <strong id="emailVerification">Checking…</strong>
+          </div>
+          <div>
+            <span>Account ID</span>
+            <strong id="accountId">—</strong>
+          </div>
+          <div>
+            <span>Joined</span>
+            <strong id="joinedDate">—</strong>
+          </div>
+        </div>
+        <button class="dashboard-btn danger" id="accountLogout" type="button">Log Out</button>
+      </section>
+
+      <footer class="dashboard-footer">
+        <span>© 2026 The Auction Room Bangladesh</span>
+        <span>Auction • Order Flow • Smart Money</span>
+      </footer>
+    </main>
+  </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="account.js"></script>
-</body></html>
+<script src="account.js?v=2"></script>
+</body>
+</html>
