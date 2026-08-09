@@ -1999,3 +1999,55 @@ html[lang="bn"] .pro-footer-copy{
     justify-content:flex-start;
   }
 }
+
+
+/* =========================================================
+   FAQ + FOOTER LAYOUT FIX
+   ========================================================= */
+.faq-section .section-wrap,
+.pro-footer .section-wrap{
+  width:min(1120px, calc(100% - 40px));
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.faq-wrap{
+  max-width:1120px;
+}
+
+.faq-heading-row{
+  width:100%;
+}
+
+.faq-list{
+  width:100%;
+}
+
+.faq-item{
+  width:100%;
+}
+
+.faq-actions{
+  width:100%;
+  justify-content:center;
+}
+
+.pro-footer{
+  margin-top:0;
+}
+
+.pro-footer .section-wrap{
+  max-width:1120px;
+}
+
+/* Hide any legacy footer that might survive browser cache */
+body > footer:not(.pro-footer){
+  display:none !important;
+}
+
+@media(max-width:760px){
+  .faq-section .section-wrap,
+  .pro-footer .section-wrap{
+    width:min(100% - 24px, 1120px);
+  }
+}
