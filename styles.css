@@ -703,3 +703,38 @@ footer{
     max-width:54%;
   }
 }
+
+
+/* Real brand logo images */
+.social-icon{
+  overflow:hidden;
+  background:#fff;
+}
+
+.social-icon img{
+  width:78%;
+  height:78%;
+  object-fit:contain;
+  display:block;
+  border-radius:8px;
+}
+
+.contact-card.facebook .social-icon img,
+.contact-card.messenger .social-icon img,
+.contact-card.telegram .social-icon img{
+  width:88%;
+  height:88%;
+  border-radius:50%;
+}
+
+.contact-card.youtube .social-icon img{
+  width:88%;
+  height:74%;
+  border-radius:8px;
+}
+
+.contact-card.gmail .social-icon img{
+  width:88%;
+  height:88%;
+  border-radius:7px;
+}
