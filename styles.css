@@ -1150,3 +1150,149 @@ footer{
   .auth-brand-panel h1{font-size:2.4rem}
   .auth-form-panel{padding:30px}
 }
+
+
+/* =========================================================
+   PREMIUM BENGALI TYPOGRAPHY
+   Applied only when the language selector sets <html lang="bn">
+   English typography and page layout remain unchanged.
+   ========================================================= */
+
+html[lang="bn"] body{
+  font-family:"Noto Sans Bengali",Inter,Arial,sans-serif;
+  font-weight:400;
+  line-height:1.72;
+  font-feature-settings:"kern" 1;
+  text-rendering:optimizeLegibility;
+}
+
+/* Bengali display typography */
+html[lang="bn"] .hero h1,
+html[lang="bn"] .section h2,
+html[lang="bn"] .community-section h2,
+html[lang="bn"] .founder-copy h2,
+html[lang="bn"] .copy-copy h2,
+html[lang="bn"] .auth-brand-panel h1,
+html[lang="bn"] .auth-form-panel h2{
+  font-family:"Noto Serif Bengali","Noto Sans Bengali",serif;
+  font-weight:700;
+  letter-spacing:0;
+  line-height:1.12;
+  text-wrap:balance;
+}
+
+/* Hero gets slightly calmer Bengali proportions without changing its grid */
+html[lang="bn"] .hero h1{
+  font-size:clamp(3.75rem,6.25vw,6.65rem);
+  line-height:1.08;
+  margin-top:22px;
+  margin-bottom:28px;
+}
+
+/* Section headings */
+html[lang="bn"] .section h2,
+html[lang="bn"] .community-section h2{
+  line-height:1.14;
+  letter-spacing:-.01em;
+}
+
+/* Paragraph readability */
+html[lang="bn"] .hero-text,
+html[lang="bn"] .section-heading > p:last-child,
+html[lang="bn"] .community-copy > p:last-child,
+html[lang="bn"] .feature-card p,
+html[lang="bn"] .path-card p,
+html[lang="bn"] .founder-copy p,
+html[lang="bn"] .copy-lead,
+html[lang="bn"] .copy-points p,
+html[lang="bn"] .copy-risk p{
+  font-family:"Noto Sans Bengali",Inter,sans-serif;
+  font-weight:400;
+  line-height:1.78;
+  letter-spacing:0;
+}
+
+/* Eyebrows in Bangla should not use Latin tracking */
+html[lang="bn"] .eyebrow,
+html[lang="bn"] .path-meta span,
+html[lang="bn"] .copy-panel-top span,
+html[lang="bn"] .copy-risk strong,
+html[lang="bn"] .invite-code-box span,
+html[lang="bn"] .brand span,
+html[lang="bn"] .footer-brand span{
+  font-family:"Noto Sans Bengali",Inter,sans-serif;
+  font-weight:600;
+  letter-spacing:.035em;
+  line-height:1.55;
+}
+
+/* Navigation + controls */
+html[lang="bn"] .nav-links a,
+html[lang="bn"] .btn,
+html[lang="bn"] .language-button,
+html[lang="bn"] .language-menu button,
+html[lang="bn"] .auth-link,
+html[lang="bn"] button{
+  font-family:"Noto Sans Bengali",Inter,sans-serif;
+  letter-spacing:0;
+}
+
+html[lang="bn"] .nav-links a{
+  font-weight:500;
+  line-height:1.45;
+}
+
+html[lang="bn"] .btn{
+  font-weight:700;
+}
+
+/* Cards and labels */
+html[lang="bn"] .feature-card h3,
+html[lang="bn"] .path-card h3,
+html[lang="bn"] .portrait-label strong,
+html[lang="bn"] .copy-panel-top strong{
+  font-family:"Noto Serif Bengali","Noto Sans Bengali",serif;
+  font-weight:600;
+  line-height:1.3;
+  letter-spacing:0;
+}
+
+html[lang="bn"] .trust-row span,
+html[lang="bn"] .terminal-grid span,
+html[lang="bn"] .copy-metrics span,
+html[lang="bn"] .contact-left small,
+html[lang="bn"] .social-name{
+  font-family:"Noto Sans Bengali",Inter,sans-serif;
+  letter-spacing:0;
+}
+
+/* Prevent Bengali words from looking cramped in compact UI */
+html[lang="bn"] .contact-card,
+html[lang="bn"] .terminal-card,
+html[lang="bn"] .copy-panel{
+  word-break:normal;
+  overflow-wrap:break-word;
+}
+
+/* Auth screens, if Bengali is used there later */
+html[lang="bn"] .form-group label,
+html[lang="bn"] .form-group input,
+html[lang="bn"] .auth-helper,
+html[lang="bn"] .auth-message{
+  font-family:"Noto Sans Bengali",Inter,sans-serif;
+  letter-spacing:0;
+}
+
+@media(max-width:600px){
+  html[lang="bn"] .hero h1{
+    font-size:3.1rem;
+    line-height:1.1;
+  }
+
+  html[lang="bn"] .section h2,
+  html[lang="bn"] .community-section h2,
+  html[lang="bn"] .copy-copy h2{
+    font-size:2.55rem;
+    line-height:1.16;
+  }
+}
