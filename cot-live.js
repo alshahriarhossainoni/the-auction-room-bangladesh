@@ -145,12 +145,10 @@
     bias.className = 'cot-bias ' + String(data.bias).toLowerCase();
 
     document.getElementById('prevNet').textContent = signed(p.net);
-    const latestNetInlineEl = document.getElementById('latestNetInline');
-    latestNetInlineEl.textContent = signed(l.net);
-    latestNetInlineEl.className = 'inline-net-position';
+    document.getElementById('latestNetInline').textContent = signed(l.net);
     const netValueEl = document.getElementById('netValue');
     netValueEl.textContent = signed(l.net);
-    netValueEl.className = 'net-position-value';
+    netValueEl.className = l.net > 0 ? 'positive-value' : l.net < 0 ? 'negative-value' : '';
     const longValueEl = document.getElementById('longValue');
     longValueEl.textContent = fmt(l.long);
     longValueEl.className = 'long-value';
@@ -251,9 +249,8 @@
     const GREEN = '#65d990';
     const RED = '#ff7474';
     const colorForValue = v => v >= 0 ? GREEN : RED;
-    const GOLD = '#e3b93f';
-    const seriesColor = series === 'long' ? GREEN : series === 'short' ? RED : GOLD;
-    const fillTop = series === 'long' ? 'rgba(101,217,144,.22)' : series === 'short' ? 'rgba(255,116,116,.20)' : 'rgba(227,185,63,.20)';
+    const seriesColor = series === 'long' ? GREEN : series === 'short' ? RED : colorForValue(vals.at(-1));
+    const fillTop = series === 'long' ? 'rgba(101,217,144,.22)' : series === 'short' ? 'rgba(255,116,116,.20)' : (vals.at(-1) >= 0 ? 'rgba(101,217,144,.20)' : 'rgba(255,116,116,.20)');
 
     const grad=ctx.createLinearGradient(0,T,0,T+gh);
     grad.addColorStop(0,fillTop);
@@ -266,9 +263,17 @@
     ctx.lineWidth=2.1;
     ctx.lineJoin='round';
     ctx.lineCap='round';
-    ctx.beginPath();
-    coords.forEach((c,i)=>i?ctx.lineTo(c.x,c.y):ctx.moveTo(c.x,c.y));
-    ctx.strokeStyle=seriesColor;ctx.stroke();
+    if (series === 'net') {
+      for (let i=1;i<coords.length;i++) {
+        const a=coords[i-1], b=coords[i];
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=colorForValue(b.p.net);ctx.stroke();
+      }
+    } else {
+      ctx.beginPath();
+      coords.forEach((c,i)=>i?ctx.lineTo(c.x,c.y):ctx.moveTo(c.x,c.y));
+      ctx.strokeStyle=seriesColor;ctx.stroke();
+    }
 
     const last=coords.at(-1);
     ctx.beginPath();ctx.arc(last.x,last.y,4,0,Math.PI*2);ctx.fillStyle=seriesColor;ctx.fill();
@@ -285,7 +290,8 @@
     const r=canvas.getBoundingClientRect(), x=e.clientX-r.left;
     const c=coords.reduce((a,b)=>Math.abs(b.x-x)<Math.abs(a.x-x)?b:a);
     tooltip.hidden=false;
-    tooltip.innerHTML=`<b>${c.p.date || c.p.label}</b><br>Net <span class="tip-net">${signed(c.p.net)}</span><br>Long <span class="tip-long">${fmt(c.p.long)}</span><br>Short <span class="tip-short">${fmt(c.p.short)}</span>`;
+    const netClass = c.p.net >= 0 ? 'tip-positive' : 'tip-negative';
+    tooltip.innerHTML=`<b>${c.p.date || c.p.label}</b><br>Net <span class="${netClass}">${signed(c.p.net)}</span><br>Long <span class="tip-long">${fmt(c.p.long)}</span><br>Short <span class="tip-short">${fmt(c.p.short)}</span>`;
     tooltip.style.left=Math.min(c.x+14,r.width-190)+'px';
     tooltip.style.top=Math.max(10,c.y-55)+'px';
   });
