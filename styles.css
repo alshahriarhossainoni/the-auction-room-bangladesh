@@ -2107,3 +2107,41 @@ body > footer:not(.pro-footer){
   .copy-qr-wrap{grid-template-columns:92px 1fr;padding:18px;gap:14px}
   .copy-qr-wrap img{width:92px;height:92px;border-radius:12px}
 }
+
+
+/* =========================================================
+   COPY TRADING — INSTITUTIONAL DASHBOARD REDESIGN
+   ========================================================= */
+.copy-section{padding:76px 0}
+.copy-dashboard{border:1px solid var(--line);border-radius:24px;overflow:hidden;background:radial-gradient(circle at 92% 0,rgba(217,178,76,.09),transparent 28%),linear-gradient(145deg,rgba(255,255,255,.018),rgba(255,255,255,.004));box-shadow:0 28px 80px rgba(0,0,0,.25)}
+.copy-head{display:flex;align-items:flex-start;justify-content:space-between;gap:30px;padding:34px 36px 28px;border-bottom:1px solid var(--line)}
+.copy-head h2{margin:9px 0 10px;font-family:"Playfair Display",serif;font-size:clamp(2rem,3.2vw,3.15rem);line-height:1.04;letter-spacing:-.025em}
+.copy-head>div:first-child>p:last-child{max-width:720px;margin:0;color:var(--muted);font-size:.9rem;line-height:1.7}
+.copy-status{flex:none;display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(217,178,76,.28);border-radius:999px;color:#d8d3c8;background:rgba(217,178,76,.045);font-size:.72rem;font-weight:700}
+.copy-status i{width:7px;height:7px;border-radius:50%;background:#63d987;box-shadow:0 0 12px rgba(99,217,135,.7)}
+.copy-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.copy-stat-grid>div{padding:20px 24px;border-right:1px solid var(--line)}
+.copy-stat-grid>div:last-child{border-right:0}
+.copy-stat-grid span,.copy-card-label{display:block;color:#8c877e;font-size:.62rem;letter-spacing:.11em;text-transform:uppercase}
+.copy-stat-grid strong{display:block;margin-top:7px;color:#f2eee6;font-size:.9rem}
+.copy-main-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;padding:24px}
+.copy-start-card,.copy-qr-card{border:1px solid rgba(255,255,255,.075);border-radius:17px;background:rgba(255,255,255,.018)}
+.copy-start-card{padding:28px}
+.copy-start-card h3{margin:8px 0 8px;font-family:"Playfair Display",serif;font-size:1.8rem}
+.copy-start-card>p{max-width:650px;margin:0;color:var(--muted);font-size:.82rem;line-height:1.65}
+.copy-actions{margin-top:21px}
+.copy-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.copy-flow div{display:flex;align-items:center;gap:9px;min-width:0}
+.copy-flow b{display:grid;place-items:center;width:28px;height:28px;flex:none;border:1px solid rgba(217,178,76,.3);border-radius:50%;color:var(--gold);font-size:.6rem}
+.copy-flow span{color:#d4cfc5;font-size:.7rem;font-weight:700;white-space:nowrap}
+.copy-flow em{color:#5f5a52;font-style:normal}
+.copy-qr-card{display:grid;grid-template-columns:108px 1fr;gap:18px;align-items:center;padding:20px}
+.copy-qr-image{display:grid;place-items:center;padding:8px;border-radius:12px;background:#fff}
+.copy-qr-image img{display:block;width:92px;height:92px;object-fit:contain}
+.copy-qr-card strong{display:block;margin:7px 0 5px;color:#f2eee6;font-size:.95rem}
+.copy-qr-card p{margin:0;color:var(--muted);font-size:.7rem;line-height:1.55}
+.copy-disclosure{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:18px 24px;border-top:1px solid var(--line);background:rgba(255,255,255,.012)}
+.copy-disclosure strong{color:var(--gold2);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
+.copy-disclosure p{margin:0;color:#777269;font-size:.66rem;line-height:1.6}
+@media(max-width:900px){.copy-stat-grid{grid-template-columns:1fr 1fr}.copy-stat-grid>div:nth-child(2){border-right:0}.copy-main-grid{grid-template-columns:1fr}.copy-qr-card{max-width:none}.copy-flow{grid-template-columns:1fr 1fr;gap:12px}.copy-flow em{display:none}}
+@media(max-width:600px){.copy-section{padding:56px 0}.copy-head{padding:25px 20px;flex-direction:column}.copy-head h2{font-size:2.15rem}.copy-stat-grid{grid-template-columns:1fr 1fr}.copy-stat-grid>div{padding:16px}.copy-main-grid{padding:14px}.copy-start-card{padding:21px}.copy-qr-card{grid-template-columns:92px 1fr;padding:16px}.copy-qr-image img{width:76px;height:76px}.copy-flow{grid-template-columns:1fr 1fr}.copy-disclosure{grid-template-columns:1fr;padding:17px 20px;gap:7px}}
