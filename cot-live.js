@@ -145,7 +145,9 @@
     bias.className = 'cot-bias ' + String(data.bias).toLowerCase();
 
     document.getElementById('prevNet').textContent = signed(p.net);
-    document.getElementById('latestNetInline').textContent = signed(l.net);
+    const latestNetInlineEl = document.getElementById('latestNetInline');
+    latestNetInlineEl.textContent = signed(l.net);
+    latestNetInlineEl.className = l.net > 0 ? 'inline-net-positive' : l.net < 0 ? 'inline-net-negative' : 'inline-net-neutral';
     const netValueEl = document.getElementById('netValue');
     netValueEl.textContent = signed(l.net);
     netValueEl.className = l.net > 0 ? 'positive-value' : l.net < 0 ? 'negative-value' : '';

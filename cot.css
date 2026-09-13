@@ -69,3 +69,8 @@
 .cot-stats strong.short-value{color:#ff7474}
 .cot-tooltip .tip-positive,.cot-tooltip .tip-long{color:#65d990;font-weight:700}
 .cot-tooltip .tip-negative,.cot-tooltip .tip-short{color:#ff7474;font-weight:700}
+
+/* Inline latest net positioning color */
+.cot-change-line strong.inline-net-positive{color:#65d990}
+.cot-change-line strong.inline-net-negative{color:#ff7474}
+.cot-change-line strong.inline-net-neutral{color:#e9cd70}
