@@ -63,3 +63,9 @@
 .signal-row strong.signal-bullish{color:#72db96}
 .signal-row strong.signal-bearish{color:#ff7878}
 .signal-row strong.signal-neutral{color:#e9cd70}
+
+/* COT semantic contract colors */
+.cot-stats strong.long-value{color:#65d990}
+.cot-stats strong.short-value{color:#ff7474}
+.cot-tooltip .tip-positive,.cot-tooltip .tip-long{color:#65d990;font-weight:700}
+.cot-tooltip .tip-negative,.cot-tooltip .tip-short{color:#ff7474;font-weight:700}

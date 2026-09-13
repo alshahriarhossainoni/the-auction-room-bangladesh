@@ -149,8 +149,12 @@
     const netValueEl = document.getElementById('netValue');
     netValueEl.textContent = signed(l.net);
     netValueEl.className = l.net > 0 ? 'positive-value' : l.net < 0 ? 'negative-value' : '';
-    document.getElementById('longValue').textContent = fmt(l.long);
-    document.getElementById('shortValue').textContent = fmt(l.short);
+    const longValueEl = document.getElementById('longValue');
+    longValueEl.textContent = fmt(l.long);
+    longValueEl.className = 'long-value';
+    const shortValueEl = document.getElementById('shortValue');
+    shortValueEl.textContent = fmt(l.short);
+    shortValueEl.className = 'short-value';
 
     setDelta('netDelta', l.net - p.net);
     setDelta('longDelta', l.long - p.long);
@@ -242,20 +246,37 @@
       p
     }));
 
+    const GREEN = '#65d990';
+    const RED = '#ff7474';
+    const colorForValue = v => v >= 0 ? GREEN : RED;
+    const seriesColor = series === 'long' ? GREEN : series === 'short' ? RED : colorForValue(vals.at(-1));
+    const fillTop = series === 'long' ? 'rgba(101,217,144,.22)' : series === 'short' ? 'rgba(255,116,116,.20)' : (vals.at(-1) >= 0 ? 'rgba(101,217,144,.20)' : 'rgba(255,116,116,.20)');
+
     const grad=ctx.createLinearGradient(0,T,0,T+gh);
-    grad.addColorStop(0,'rgba(217,178,76,.24)');
-    grad.addColorStop(1,'rgba(217,178,76,0)');
+    grad.addColorStop(0,fillTop);
+    grad.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath();
     coords.forEach((c,i)=>i?ctx.lineTo(c.x,c.y):ctx.moveTo(c.x,c.y));
     ctx.lineTo(coords.at(-1).x,T+gh);ctx.lineTo(coords[0].x,T+gh);ctx.closePath();
     ctx.fillStyle=grad;ctx.fill();
 
-    ctx.beginPath();
-    coords.forEach((c,i)=>i?ctx.lineTo(c.x,c.y):ctx.moveTo(c.x,c.y));
-    ctx.strokeStyle='#e0b84c';ctx.lineWidth=2.1;ctx.stroke();
+    ctx.lineWidth=2.1;
+    ctx.lineJoin='round';
+    ctx.lineCap='round';
+    if (series === 'net') {
+      for (let i=1;i<coords.length;i++) {
+        const a=coords[i-1], b=coords[i];
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=colorForValue(b.p.net);ctx.stroke();
+      }
+    } else {
+      ctx.beginPath();
+      coords.forEach((c,i)=>i?ctx.lineTo(c.x,c.y):ctx.moveTo(c.x,c.y));
+      ctx.strokeStyle=seriesColor;ctx.stroke();
+    }
 
     const last=coords.at(-1);
-    ctx.beginPath();ctx.arc(last.x,last.y,4,0,Math.PI*2);ctx.fillStyle='#f2cf69';ctx.fill();
+    ctx.beginPath();ctx.arc(last.x,last.y,4,0,Math.PI*2);ctx.fillStyle=seriesColor;ctx.fill();
 
     ctx.fillStyle='#77736c';ctx.font='11px Inter';
     const step=Math.max(1,Math.floor(data.points.length/7));
@@ -269,7 +290,8 @@
     const r=canvas.getBoundingClientRect(), x=e.clientX-r.left;
     const c=coords.reduce((a,b)=>Math.abs(b.x-x)<Math.abs(a.x-x)?b:a);
     tooltip.hidden=false;
-    tooltip.innerHTML=`<b>${c.p.date || c.p.label}</b><br>Net ${signed(c.p.net)}<br>Long ${fmt(c.p.long)}<br>Short ${fmt(c.p.short)}`;
+    const netClass = c.p.net >= 0 ? 'tip-positive' : 'tip-negative';
+    tooltip.innerHTML=`<b>${c.p.date || c.p.label}</b><br>Net <span class="${netClass}">${signed(c.p.net)}</span><br>Long <span class="tip-long">${fmt(c.p.long)}</span><br>Short <span class="tip-short">${fmt(c.p.short)}</span>`;
     tooltip.style.left=Math.min(c.x+14,r.width-190)+'px';
     tooltip.style.top=Math.max(10,c.y-55)+'px';
   });
