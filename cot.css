@@ -74,3 +74,8 @@
 .cot-change-line strong.inline-net-positive{color:#65d990}
 .cot-change-line strong.inline-net-negative{color:#ff7474}
 .cot-change-line strong.inline-net-neutral{color:#e9cd70}
+
+/* v7: Net is positioning state, not weekly direction */
+.cot-stats strong.net-position-value{color:#e9cd70}
+.cot-change-line strong.inline-net-position{color:#e9cd70}
+.cot-tooltip .tip-net{color:#e9cd70;font-weight:700}
