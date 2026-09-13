@@ -56,3 +56,10 @@
 .active-page{color:#e5c965!important}
 @media(max-width:800px){.cot-toolbar,.cot-hero-card,.cot-panel-head,.cot-change-line{align-items:flex-start;flex-direction:column}.cot-score-wrap{text-align:left;justify-items:start}.cot-stats{grid-template-columns:1fr}.cot-stats>div{border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}.cot-bottom-grid{grid-template-columns:1fr}.cot-note{grid-template-columns:1fr}.cot-change-line div{justify-content:flex-start}#cotChart{height:330px}}
 @media(max-width:520px){.cot-main{width:min(100% - 22px,1120px)}.cot-hero-card,.cot-insight-card,.cot-panel{padding:18px}.cot-symbol{width:46px;height:46px}.cot-hero-card h1{font-size:2rem}.cot-sync{width:100%;justify-content:space-between}}
+
+/* Directional COT color system */
+.cot-stats strong.positive-value{color:#72db96}
+.cot-stats strong.negative-value{color:#ff7878}
+.signal-row strong.signal-bullish{color:#72db96}
+.signal-row strong.signal-bearish{color:#ff7878}
+.signal-row strong.signal-neutral{color:#e9cd70}

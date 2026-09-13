@@ -146,7 +146,9 @@
 
     document.getElementById('prevNet').textContent = signed(p.net);
     document.getElementById('latestNetInline').textContent = signed(l.net);
-    document.getElementById('netValue').textContent = signed(l.net);
+    const netValueEl = document.getElementById('netValue');
+    netValueEl.textContent = signed(l.net);
+    netValueEl.className = l.net > 0 ? 'positive-value' : l.net < 0 ? 'negative-value' : '';
     document.getElementById('longValue').textContent = fmt(l.long);
     document.getElementById('shortValue').textContent = fmt(l.short);
 
@@ -173,10 +175,16 @@
     const pts = data.points;
     const p3 = pts.at(-3) || p;
     const p6 = pts.at(-6) || p3;
-    document.getElementById('signalOne').textContent = netDelta > 0 ? 'Net long increased' : netDelta < 0 ? 'Net long decreased' : 'Unchanged';
-    document.getElementById('signalThree').textContent = l.net > p3.net ? 'Accumulation' : l.net < p3.net ? 'Distribution' : 'Flat';
-    document.getElementById('signalSix').textContent = l.net > p6.net ? 'Net long structure rising' : l.net < p6.net ? 'Net long structure falling' : 'Balanced';
+    setSignal('signalOne', netDelta > 0 ? 'Net long increased' : netDelta < 0 ? 'Net long decreased' : 'Unchanged', netDelta);
+    setSignal('signalThree', l.net > p3.net ? 'Accumulation' : l.net < p3.net ? 'Distribution' : 'Flat', l.net - p3.net);
+    setSignal('signalSix', l.net > p6.net ? 'Net long structure rising' : l.net < p6.net ? 'Net long structure falling' : 'Balanced', l.net - p6.net);
     document.getElementById('chartRangeLabel').textContent = `Latest ${pts.length} reports`;
+  }
+
+  function setSignal(id, text, direction) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = direction > 0 ? 'signal-bullish' : direction < 0 ? 'signal-bearish' : 'signal-neutral';
   }
 
   function setDelta(id, value) {
