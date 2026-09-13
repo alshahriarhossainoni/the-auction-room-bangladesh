@@ -15,6 +15,7 @@
 .cot-hero-card{min-height:150px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px 30px;background:radial-gradient(circle at 82% 20%,rgba(217,178,76,.10),transparent 30%),#0d0d0c}
 .cot-symbol-wrap{display:flex;align-items:center;gap:18px}
 .cot-symbol{width:55px;height:55px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f3d66f,#c39723);color:#181208;font-weight:800}
+.cot-bullion-icon{width:31px;height:31px;display:block;filter:drop-shadow(0 1px 0 rgba(255,255,255,.16))}
 .cot-hero-card h1{margin:5px 0 3px;font:700 clamp(2rem,4vw,3.4rem)/1 "Playfair Display",serif}
 .cot-hero-card h1 span{color:#b5aea1;font:500 .45em/1 Inter,sans-serif}
 .cot-hero-card p{margin:0;color:#8f8a80}
@@ -69,3 +70,13 @@
 .cot-stats strong.short-value{color:#ff7474}
 .cot-tooltip .tip-positive,.cot-tooltip .tip-long{color:#65d990;font-weight:700}
 .cot-tooltip .tip-negative,.cot-tooltip .tip-short{color:#ff7474;font-weight:700}
+
+/* Inline latest net positioning color */
+.cot-change-line strong.inline-net-positive{color:#65d990}
+.cot-change-line strong.inline-net-negative{color:#ff7474}
+.cot-change-line strong.inline-net-neutral{color:#e9cd70}
+
+/* v7: Net is positioning state, not weekly direction */
+.cot-stats strong.net-position-value{color:#e9cd70}
+.cot-change-line strong.inline-net-position{color:#e9cd70}
+.cot-tooltip .tip-net{color:#e9cd70;font-weight:700}

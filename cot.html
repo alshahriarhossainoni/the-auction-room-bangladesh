@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20" />
-  <link rel="stylesheet" href="cot.css?v=3" />
+  <link rel="stylesheet" href="cot.css?v=8" />
 </head>
 <body class="cot-page">
   <div class="noise" aria-hidden="true"></div>
@@ -55,7 +55,12 @@
 
     <section class="cot-hero-card">
       <div class="cot-symbol-wrap">
-        <div class="cot-symbol">Au</div>
+        <div class="cot-symbol" aria-label="Gold bullion">
+          <svg class="cot-bullion-icon" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M12 37h20l-4 13H8l4-13Zm24 0h20l-4 13H32l4-13ZM25 18h20l-4 13H21l4-13Z" fill="currentColor"/>
+            <path d="M12 37l4-5h20l-4 5H12Zm24 0 4-5h20l-4 5H36Zm-11-19 4-5h20l-4 5H25Z" fill="currentColor" opacity=".55"/>
+          </svg>
+        </div>
         <div>
           <p class="eyebrow">TAR Smart Money Monitor</p>
           <h1>XAUUSD <span>Gold</span></h1>
@@ -150,7 +155,7 @@
     </div>
   </footer>
 
-  <script src="cot-live.js?v=3"></script>
+  <script src="cot-live.js?v=8"></script>
   <script src="script.js?v=4"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
