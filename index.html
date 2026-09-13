@@ -219,19 +219,19 @@
     <section class="section copy-section" id="copy-trading">
       <div class="copy-shell reveal">
         <div class="copy-copy">
-          <p class="eyebrow">Copy Trading</p>
-          <h2>Follow TAR through supported copy-trading infrastructure.</h2>
+          <p class="eyebrow">TAR Copy Trading</p>
+          <h2>Follow The Auction Room Bangladesh directly.</h2>
           <p class="copy-lead">
-            For traders who prefer a structured, hands-off way to follow selected TAR trading activity,
-            copy trading can automatically replicate eligible trades while you retain visibility and control over your own account.
+            Access the official TAR copy-trading strategy from one place. Review the strategy first, choose your own allocation,
+            and complete the follow process through the supported execution platform.
           </p>
 
           <div class="copy-points">
             <article>
               <span>01</span>
               <div>
-                <strong>Gold-Focused Approach</strong>
-                <p>Trading decisions are built around Auction Market Theory, Order Flow and options context.</p>
+                <strong>AMT + Order Flow Framework</strong>
+                <p>Trading decisions are built around Auction Market Theory, Order Flow, market context and disciplined execution.</p>
               </div>
             </article>
 
@@ -239,56 +239,58 @@
               <span>02</span>
               <div>
                 <strong>Automatic Trade Replication</strong>
-                <p>Once connected through the supported platform, eligible trades can be copied automatically.</p>
+                <p>After you follow the official strategy, eligible trades can be replicated automatically according to the platform settings.</p>
               </div>
             </article>
 
             <article>
               <span>03</span>
               <div>
-                <strong>Transparency & Control</strong>
-                <p>Monitor performance, manage allocation and maintain control of your own trading account.</p>
+                <strong>Your Account, Your Control</strong>
+                <p>You remain responsible for your account, allocation, risk settings and whether you continue following the strategy.</p>
               </div>
             </article>
           </div>
 
-          <div class="invite-code-box">
-            <div>
-              <span>GTCFX Invite Code</span>
-              <strong id="gtcInviteCode">t96SW2St</strong>
-            </div>
-            <button type="button" class="copy-code-btn" id="copyInviteCode">Copy Code</button>
-          </div>
-
           <div class="copy-actions">
-            <a class="btn btn-primary" href="https://web.mygtc.app/login/register?ref=t96SW2St" target="_blank" rel="noopener noreferrer">
-              Open GTCFX Account ↗
+            <a class="btn btn-primary" href="https://client.lirunex.online/socialtradingstrategydetails?moneyManagerPublishRequestId=6340" target="_blank" rel="noopener noreferrer">
+              Start Copy Trading ↗
             </a>
             <a class="btn btn-secondary" href="https://m.me/j/Aban6gzLX7mWM_Ki/?send_source=gc:copy_invite_link_c" target="_blank" rel="noopener noreferrer">
               Contact TAR
             </a>
           </div>
+
+          <p class="copy-platform-note">Strategy execution is completed through the supported third-party platform. TAR Bangladesh does not custody client funds.</p>
         </div>
 
         <aside class="copy-panel">
           <div class="copy-panel-top">
-            <span>Strategy Access</span>
-            <strong>GTCFX Copy Trading</strong>
+            <span>Official Strategy Access</span>
+            <strong>The Auction Room Bangladesh</strong>
+          </div>
+
+          <div class="copy-qr-wrap">
+            <img src="lirunex-qr.png" alt="QR code for The Auction Room Bangladesh copy trading strategy" />
+            <div>
+              <span>Scan to open strategy</span>
+              <strong>TAR Copy Trading</strong>
+              <p>Scan with your phone or use the Start Copy Trading button.</p>
+            </div>
           </div>
 
           <div class="copy-metrics">
             <div><span>Primary Market</span><strong>Gold</strong></div>
             <div><span>Framework</span><strong>AMT + Order Flow</strong></div>
-            <div><span>Execution</span><strong>Structured</strong></div>
+            <div><span>Execution</span><strong>Copy Trading</strong></div>
             <div><span>Account Control</span><strong>User Managed</strong></div>
           </div>
 
           <div class="copy-risk">
             <strong>Risk Disclosure</strong>
             <p>
-              Copy trading and leveraged CFD trading involve substantial risk. Past performance does not guarantee future results.
-              You may lose some or all of your invested capital. Product availability and eligibility depend on your jurisdiction
-              and the broker's applicable rules.
+              Copy trading and leveraged trading involve substantial risk. Past performance does not guarantee future results.
+              You may lose some or all of your invested capital. Review the strategy, fees, platform terms and jurisdictional eligibility before following.
             </p>
           </div>
         </aside>
@@ -443,33 +445,7 @@
 
 <script src="script.js?v=4"></script>
 
-  <script>
-    const copyInviteCodeButton = document.getElementById('copyInviteCode');
-    const inviteCodeElement = document.getElementById('gtcInviteCode');
-
-    copyInviteCodeButton?.addEventListener('click', async () => {
-      const code = inviteCodeElement?.textContent?.trim() || 't96SW2St';
-
-      try {
-        await navigator.clipboard.writeText(code);
-        copyInviteCodeButton.textContent = 'Copied ✓';
-      } catch (error) {
-        const temporaryInput = document.createElement('input');
-        temporaryInput.value = code;
-        document.body.appendChild(temporaryInput);
-        temporaryInput.select();
-        document.execCommand('copy');
-        temporaryInput.remove();
-        copyInviteCodeButton.textContent = 'Copied ✓';
-      }
-
-      setTimeout(() => {
-        copyInviteCodeButton.textContent = 'Copy Code';
-      }, 1800);
-    });
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="language.js"></script><footer class="pro-footer">
     <div class="section-wrap">

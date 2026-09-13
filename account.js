@@ -82,7 +82,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Copy trading access
   const copyLink = document.getElementById("copyTradingLink");
   if (copyAccess) {
-    copyLink.textContent = "Open GTCFX Account ↗";
+    copyLink.textContent = "Start Copy Trading ↗";
+    copyLink.href = "https://client.lirunex.online/socialtradingstrategydetails?moneyManagerPublishRequestId=6340";
+    copyLink.target = "_blank";
     copyLink.classList.remove("restricted");
   } else {
     copyLink.textContent = "Copy Trading Access Pending";
