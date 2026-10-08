@@ -1,0 +1,1 @@
+Exness CSV supported: closing_time_utc, opening_time_utc, opening_price, closing_price. UTC timestamps normalized. Repeated tickets with distinct closing times preserved. Net P&L = profit + commission + swap. Import this CSV with the Import CSV button and review the preview before saving. Existing Supabase table remains unchanged.
