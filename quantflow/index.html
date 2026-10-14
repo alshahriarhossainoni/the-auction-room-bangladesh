@@ -1,170 +1,430 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TAR QuantFlow | GC Research Terminal</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>TAR QuantFlow | GC Futures Terminal</title>
+
+  <!-- CSS inside nested quantflow folder -->
+  <link rel="stylesheet" href="./quantflow/styles.css">
 </head>
+
 <body>
+
 <header>
   <div class="brand">
     <b>◈ TAR</b>
     <span>QUANTFLOW <small>TERMINAL</small></span>
   </div>
+
   <div class="topmeta">
-    <span id="sourceBadge" class="badge">SYNTHETIC DEMO</span>
+    <span id="sourceBadge" class="badge">
+      SYNTHETIC DEMO
+    </span>
     <span>GC · COMEX Gold Futures</span>
     <span>Research Only · No Execution</span>
   </div>
 </header>
 
 <div class="layout">
-<aside>
-  <h4>WORKSPACE</h4>
-  <button class="nav active" data-panel="terminal">▥ Order Flow Terminal</button>
-  <button class="nav" data-panel="quant">⌁ Quant Backtester</button>
-  <button class="nav" data-panel="data">▤ Data Manager</button>
-  <div class="sideinfo">
-    <strong>GC FUTURES</strong>
-    <p>Tick size: 0.10</p>
-    <p>Tick value: $10 / contract</p>
-    <p>Point value: $100</p>
-    <hr>
-    <p>Historical replay and analytics. No brokerage or exchange connection.</p>
-  </div>
-</aside>
 
-<main>
-  <div class="heading">
-    <div>
-      <div class="eyebrow">INSTITUTIONAL RESEARCH WORKSPACE</div>
-      <h1 id="panelTitle">Order Flow Terminal</h1>
-      <p id="panelSubtitle">Historical GC trade prints · Footprint · CVD · Volume Profile</p>
-    </div>
-    <div class="actions">
-      <label class="upload">↑ Import CSV
-        <input id="fileInput" type="file" accept=".csv,text/csv" hidden>
-      </label>
-      <button id="demoBtn">Load Demo</button>
-    </div>
-  </div>
+  <!-- SIDEBAR -->
+  <aside>
+    <h4>WORKSPACE</h4>
 
-  <div class="toolbar">
-    <label>Bar size
-      <select id="barSize">
-        <option value="60">1 minute</option>
-        <option value="300" selected>5 minutes</option>
-        <option value="900">15 minutes</option>
-      </select>
-    </label>
-    <label>Footprint
-      <select id="fpMode">
-        <option value="bidask">Bid × Ask</option>
-        <option value="delta">Delta</option>
-      </select>
-    </label>
-    <label>Replay
-      <input type="range" id="replay" min="1" max="100" value="100">
-    </label>
-    <button id="playBtn">▶ Play</button>
-    <span id="replayInfo">Full session</span>
-  </div>
+    <button class="nav active" data-panel="terminal">
+      ▥ Order Flow Terminal
+    </button>
 
-  <section id="terminal" class="panel">
-    <div class="stats">
-      <article><small>LAST TRADE</small><strong id="lastPrice">—</strong></article>
-      <article><small>TOTAL VOLUME</small><strong id="totalVol">—</strong></article>
-      <article><small>SESSION DELTA</small><strong id="deltaStat">—</strong></article>
-      <article><small>SESSION POC</small><strong id="pocStat">—</strong></article>
-      <article><small>SESSION VWAP</small><strong id="vwapStat">—</strong></article>
-    </div>
+    <button class="nav" data-panel="quant">
+      ⌁ Quant Backtester
+    </button>
 
-    <div class="charts">
-      <div class="card price">
-        <div class="cardtitle">GC · Price / VWAP <span id="priceNote">Historical trade bars</span></div>
-        <canvas id="priceCanvas"></canvas>
-      </div>
-      <div class="card footprint">
-        <div class="cardtitle">Footprint · Price levels <span>Last 8 bars</span></div>
-        <div id="footprintGrid" class="fpwrap"></div>
-      </div>
-      <div class="card cvd">
-        <div class="cardtitle">Cumulative Volume Delta <span>Signed trade flow</span></div>
-        <canvas id="cvdCanvas"></canvas>
-      </div>
-      <div class="card profile">
-        <div class="cardtitle">Volume Profile <span>Session histogram</span></div>
-        <div id="profileRows"></div>
-      </div>
-    </div>
-  </section>
+    <button class="nav" data-panel="data">
+      ▤ Data Manager
+    </button>
 
-  <section id="quant" class="panel hidden">
-    <div class="card formcard">
-      <h2>VWAP Close-Cross Strategy</h2>
+    <div class="sideinfo">
+      <strong>GC FUTURES</strong>
+
+      <p>Tick Size: 0.10</p>
+      <p>Tick Value: $10 / Contract</p>
+      <p>Point Value: $100</p>
+
+      <hr>
+
       <p>
-        Long when a completed bar closes above VWAP after closing below it.
-        Short for the reverse. Exit after the chosen number of bars.
-        One position at a time; fills simulated at the NEXT bar open,
-        with configurable per-side slippage and round-trip commission.
+        Historical replay and order flow analytics.
+        No live exchange connection.
       </p>
-      <div class="fields">
-        <label>Hold bars <input id="holdBars" type="number" min="1" max="30" value="3"></label>
-        <label>Slippage (ticks per side) <input id="slipTicks" type="number" min="0" max="50" value="1"></label>
-        <label>Round-trip commission ($) <input id="commission" type="number" min="0" step="0.1" value="5"></label>
-        <label>Contracts <input id="contracts" type="number" min="1" max="100" value="1"></label>
-      </div>
-      <button class="gold" id="runBacktest">Run Backtest</button>
     </div>
-    <div class="stats" id="btStats"></div>
-    <div class="card">
-      <div class="cardtitle">Completed simulated trades</div>
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr><th>Entry (UTC)</th><th>Side</th><th>Entry</th><th>Exit</th><th>Bars</th><th>Net P&L</th></tr>
-          </thead>
-          <tbody id="btRows"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
+  </aside>
 
-  <section id="data" class="panel hidden">
-    <div class="card formcard">
-      <h2>Historical Trade Data</h2>
-      <p id="dataStatus">Demo data loaded. Import your own licensed GC time-and-sales data.</p>
-      <p>
-        <b>Accepted CSV headers:</b>
-        <code>timestamp,price,size,side</code>.
-        Timestamp must be ISO-8601 with timezone.
-        Side must be BUY or SELL (aggressor side).
-      </p>
-      <p>
-        Without trustworthy aggressor-side data, true Bid/Ask Footprint
-        and CVD cannot be computed. Broker account trade history
-        is not market-wide Time & Sales.
-      </p>
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <div class="heading">
+      <div>
+        <div class="eyebrow">
+          INSTITUTIONAL RESEARCH WORKSPACE
+        </div>
+
+        <h1 id="panelTitle">
+          Order Flow Terminal
+        </h1>
+
+        <p id="panelSubtitle">
+          Historical GC Trade Prints · Footprint ·
+          CVD · Volume Profile
+        </p>
+      </div>
+
       <div class="actions">
-        <a href="data/sample-gc-trades.csv" download class="upload">↓ Download demo CSV</a>
-        <button id="exportBtn">↓ Export current trades</button>
-      </div>
-      <h3>Project Architecture</h3>
-      <pre>index.html — Terminal UI
-styles.css — Design
-app.js — Analytics, replay, backtesting
-data/ — Synthetic GC sample data</pre>
-    </div>
-  </section>
+        <label class="upload">
+          ↑ Import CSV
+          <input
+            id="fileInput"
+            type="file"
+            accept=".csv,text/csv"
+            hidden
+          >
+        </label>
 
-  <footer>
-    © TAR Bangladesh · Research & simulation only ·
-    Demo prices are fabricated · Not financial advice
-  </footer>
-</main>
+        <button id="demoBtn">
+          Load Demo
+        </button>
+      </div>
+    </div>
+
+    <!-- CHART CONTROLS -->
+    <div class="toolbar">
+
+      <label>
+        Bar Size
+        <select id="barSize">
+          <option value="60">1 Minute</option>
+          <option value="300" selected>5 Minutes</option>
+          <option value="900">15 Minutes</option>
+        </select>
+      </label>
+
+      <label>
+        Footprint
+        <select id="fpMode">
+          <option value="bidask">Bid × Ask</option>
+          <option value="delta">Delta</option>
+        </select>
+      </label>
+
+      <label>
+        Historical Replay
+        <input
+          type="range"
+          id="replay"
+          min="1"
+          max="100"
+          value="100"
+        >
+      </label>
+
+      <button id="playBtn">
+        ▶ Play
+      </button>
+
+      <span id="replayInfo">
+        Full Session
+      </span>
+
+    </div>
+
+    <!-- ORDER FLOW TERMINAL -->
+    <section id="terminal" class="panel">
+
+      <div class="stats">
+
+        <article>
+          <small>LAST TRADE</small>
+          <strong id="lastPrice">—</strong>
+        </article>
+
+        <article>
+          <small>TOTAL VOLUME</small>
+          <strong id="totalVol">—</strong>
+        </article>
+
+        <article>
+          <small>SESSION DELTA</small>
+          <strong id="deltaStat">—</strong>
+        </article>
+
+        <article>
+          <small>SESSION POC</small>
+          <strong id="pocStat">—</strong>
+        </article>
+
+        <article>
+          <small>SESSION VWAP</small>
+          <strong id="vwapStat">—</strong>
+        </article>
+
+      </div>
+
+      <div class="charts">
+
+        <!-- PRICE CHART -->
+        <div class="card price">
+
+          <div class="cardtitle">
+            GC · Price / VWAP
+            <span id="priceNote">
+              Historical Trade Bars
+            </span>
+          </div>
+
+          <canvas id="priceCanvas"></canvas>
+
+        </div>
+
+        <!-- FOOTPRINT CHART -->
+        <div class="card footprint">
+
+          <div class="cardtitle">
+            Footprint · Price Levels
+            <span>Last 8 Bars</span>
+          </div>
+
+          <div
+            id="footprintGrid"
+            class="fpwrap">
+          </div>
+
+        </div>
+
+        <!-- CVD CHART -->
+        <div class="card cvd">
+
+          <div class="cardtitle">
+            Cumulative Volume Delta
+            <span>Signed Trade Flow</span>
+          </div>
+
+          <canvas id="cvdCanvas"></canvas>
+
+        </div>
+
+        <!-- VOLUME PROFILE -->
+        <div class="card profile">
+
+          <div class="cardtitle">
+            Volume Profile
+            <span>Session Histogram</span>
+          </div>
+
+          <div id="profileRows"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- QUANT BACKTESTER -->
+    <section id="quant" class="panel hidden">
+
+      <div class="card formcard">
+
+        <h2>
+          VWAP Close-Cross Strategy
+        </h2>
+
+        <p>
+          Long when a completed bar closes above
+          VWAP after closing below it.
+
+          Short when a completed bar closes below
+          VWAP after closing above it.
+
+          Simulated execution uses the next bar open,
+          including slippage and commission.
+        </p>
+
+        <div class="fields">
+
+          <label>
+            Hold Bars
+            <input
+              id="holdBars"
+              type="number"
+              min="1"
+              max="30"
+              value="3"
+            >
+          </label>
+
+          <label>
+            Slippage (Ticks Per Side)
+            <input
+              id="slipTicks"
+              type="number"
+              min="0"
+              max="50"
+              value="1"
+            >
+          </label>
+
+          <label>
+            Round-Trip Commission ($)
+            <input
+              id="commission"
+              type="number"
+              min="0"
+              step="0.1"
+              value="5"
+            >
+          </label>
+
+          <label>
+            Contracts
+            <input
+              id="contracts"
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+            >
+          </label>
+
+        </div>
+
+        <button
+          class="gold"
+          id="runBacktest">
+          Run Backtest
+        </button>
+
+      </div>
+
+      <div
+        class="stats"
+        id="btStats">
+      </div>
+
+      <div class="card">
+
+        <div class="cardtitle">
+          Completed Simulated Trades
+        </div>
+
+        <div class="tablewrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Entry (UTC)</th>
+                <th>Side</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>Bars</th>
+                <th>Net P&L</th>
+              </tr>
+            </thead>
+
+            <tbody id="btRows"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- DATA MANAGER -->
+    <section id="data" class="panel hidden">
+
+      <div class="card formcard">
+
+        <h2>Historical Trade Data</h2>
+
+        <p id="dataStatus">
+          Synthetic demonstration data loaded.
+        </p>
+
+        <p>
+          Import licensed GC Time & Sales data
+          containing trade timestamps, prices,
+          sizes and aggressor-side information.
+        </p>
+
+        <p>
+          <b>Required CSV Headers:</b>
+          <code>timestamp,price,size,side</code>
+        </p>
+
+        <p>
+          Timestamps must include timezone.
+          Side values must be BUY or SELL.
+        </p>
+
+        <p>
+          Exness account trade history cannot
+          reproduce market-wide CME Bid × Ask
+          Footprint or genuine futures CVD.
+        </p>
+
+        <div class="actions">
+
+          <button id="exportBtn">
+            ↓ Export Current Trades
+          </button>
+
+        </div>
+
+        <h3>Platform Architecture</h3>
+
+        <pre>
+TAR QuantFlow Terminal
+│
+├── Order Flow Analytics
+│   ├── Bid × Ask Footprint
+│   ├── Delta Footprint
+│   ├── Cumulative Volume Delta
+│   ├── Volume Profile
+│   └── VWAP
+│
+├── Historical Replay
+│
+├── Quant Backtesting
+│   ├── Strategy Signals
+│   ├── Simulated Execution
+│   ├── Commission
+│   └── Slippage
+│
+└── Data Manager
+    ├── CSV Import
+    └── CSV Export
+        </pre>
+
+      </div>
+
+    </section>
+
+    <footer>
+      © The Auction Room Bangladesh |
+      TAR QuantFlow Terminal v0.1 |
+      Historical Research & Simulation Only |
+      No Live Trading Execution
+    </footer>
+
+  </main>
+
 </div>
-<script src="app.js"></script>
+
+<!-- JavaScript inside nested quantflow folder -->
+<script src="./quantflow/app.js"></script>
+
 </body>
 </html>
