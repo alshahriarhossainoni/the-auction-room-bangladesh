@@ -1,10 +1,29 @@
 
 "use strict";
 
+/*
+ TAR QuantFlow Terminal v0.2
+ GC Futures historical research prototype
+ Synthetic demo or imported aggressor-side trades
+ No live market data or order execution
+*/
+
 const $ = id => document.getElementById(id);
 const TICK = 0.1;
-let trades = [], bars = [], visible = [];
-let timer = null, source = "SYNTHETIC DEMO";
+const POINT_VALUE = 100;
+
+let trades = [];
+let bars = [];
+let visible = [];
+let timer = null;
+let source = "SYNTHETIC DEMO";
+
+const FP = {
+  ratio: 300,
+  minVolume: 10,
+  stack: 3,
+  maxLevels: 150
+};
 
 const fmt = (n, d = 1) =>
   Number(n).toLocaleString("en-US", {
@@ -12,122 +31,156 @@ const fmt = (n, d = 1) =>
     maximumFractionDigits: d
   });
 
-function randomGenerator(seed) {
+const signed = n => n > 0 ? "+" + n : String(n);
+
+function seededRandom(seed) {
   return () => {
     seed = (seed * 1664525 + 1013904223) >>> 0;
     return seed / 4294967296;
   };
 }
 
-function demo() {
-  const r = randomGenerator(481516), arr = [];
-  let p = 4110;
+/* ---------- DEMO DATA ---------- */
+
+function makeDemo() {
+  const r = seededRandom(481516);
+  const data = [];
+  let price = 4110;
   const start = Date.parse("2026-10-08T12:00:00Z");
 
   for (let i = 0; i < 1800; i++) {
-    const move = r();
-    p = Math.round(
-      (p + (move < .46 ? -.1 : move > .55 ? .1 : 0)
-        + (i % 270 < 80 ? .018 : -.01)) * 10
+    const n = r();
+    const drift = i % 270 < 80 ? 0.018 : -0.01;
+
+    price = Math.round(
+      (price + (n < .46 ? -.1 : n > .55 ? .1 : 0)
+      + drift) * 10
     ) / 10;
 
-    arr.push({
+    data.push({
       ts: start + i * 12000,
-      price: p,
+      price,
       size: 1 + Math.floor(r() * 8),
-      side: r() < (move > .53 ? .78 : move < .47 ? .22 : .5)
+      side: r() < (n > .53 ? .78 : n < .47 ? .22 : .5)
         ? "BUY" : "SELL"
     });
   }
-  return arr;
+  return data;
 }
 
-function csvRows(s) {
-  s = s.replace(/^\uFEFF/, "");
-  let rows = [], row = [], v = "", quoted = false;
+/* ---------- CSV PARSER ---------- */
 
-  for (let i = 0; i < s.length; i++) {
-    const c = s[i];
+function splitCSV(text) {
+  text = text.replace(/^\uFEFF/, "");
+  const rows = [];
+  let row = [], value = "", quoted = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
     if (c === '"') {
-      if (quoted && s[i + 1] === '"') {
-        v += '"'; i++;
-      } else quoted = !quoted;
+      if (quoted && text[i + 1] === '"') {
+        value += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
     } else if (c === "," && !quoted) {
-      row.push(v); v = "";
+      row.push(value);
+      value = "";
     } else if ((c === "\n" || c === "\r") && !quoted) {
-      if (c === "\r" && s[i + 1] === "\n") i++;
-      row.push(v);
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(value);
       if (row.some(x => x.trim())) rows.push(row);
-      row = []; v = "";
-    } else v += c;
+      row = [];
+      value = "";
+    } else {
+      value += c;
+    }
   }
-  row.push(v);
+
+  if (quoted) throw Error("Unclosed CSV quote");
+  row.push(value);
   if (row.some(x => x.trim())) rows.push(row);
   return rows;
 }
 
 function parseCSV(raw) {
-  const rows = csvRows(raw);
+  const rows = splitCSV(raw);
   if (rows.length < 2) throw Error("CSV has no trade rows");
 
-  const h = rows.shift().map(x =>
+  const headers = rows.shift().map(x =>
     x.trim().toLowerCase().replace(/[^a-z0-9]/g, "")
   );
-  const index = keys => h.findIndex(x => keys.includes(x));
 
-  const ti = index(["timestamp", "time", "datetime", "tradetime"]);
-  const pi = index(["price", "tradeprice"]);
-  const si = index(["size", "volume", "qty", "quantity"]);
-  const di = index(["side", "aggressorside", "aggressor"]);
+  const find = names =>
+    headers.findIndex(h => names.includes(h));
+
+  const ti = find(["timestamp", "datetime", "time", "tradetime"]);
+  const pi = find(["price", "tradeprice"]);
+  const si = find(["size", "volume", "qty", "quantity"]);
+  const di = find(["side", "aggressorside", "aggressor"]);
 
   if ([ti, pi, si, di].some(x => x < 0)) {
-    throw Error("Required columns: timestamp, price, size, side");
+    throw Error("Required: timestamp,price,size,side");
   }
 
-  const result = [];
-  for (let n = 0; n < rows.length; n++) {
-    const row = rows[n];
-    const str = row[ti]?.trim();
-    const ts = Date.parse(str);
+  if (rows.length > 200000) {
+    throw Error("MVP supports up to 200,000 trades");
+  }
+
+  const data = rows.map((row, i) => {
+    const stamp = (row[ti] || "").trim();
+    const ts = Date.parse(stamp);
     const price = Number(row[pi]);
     const size = Number(row[si]);
-    const side = row[di]?.trim().toUpperCase();
+    const side = (row[di] || "").trim().toUpperCase();
 
     if (
-      !/(Z|[+-]\d\d:\d\d)$/.test(str || "") ||
+      !/(Z|[+-]\d{2}:\d{2})$/i.test(stamp) ||
       !Number.isFinite(ts) ||
       !Number.isFinite(price) || price <= 0 ||
       !Number.isFinite(size) || size <= 0 ||
       !["BUY", "SELL"].includes(side)
     ) {
-      throw Error("Invalid CSV row " + (n + 2));
+      throw Error("Invalid CSV row " + (i + 2));
     }
-    result.push({ ts, price, size, side });
-  }
 
-  if (result.length > 200000)
-    throw Error("MVP limit: 200,000 trades");
+    return { ts, price, size, side };
+  });
 
-  result.sort((a, b) => a.ts - b.ts);
-  return result;
+  data.sort((a, b) => a.ts - b.ts);
+  return data;
 }
 
-function aggregate(data, sec) {
-  const m = new Map();
-  let cumPV = 0, cumVol = 0, cumDelta = 0;
+/* ---------- BAR AGGREGATION ---------- */
+
+function aggregate(data, seconds) {
+  const map = new Map();
+  let cumulativePV = 0;
+  let cumulativeVolume = 0;
+  let cumulativeDelta = 0;
 
   for (const t of data) {
-    const key = Math.floor(t.ts / (sec * 1000)) * sec * 1000;
-    let b = m.get(key);
+    const key =
+      Math.floor(t.ts / (seconds * 1000)) * seconds * 1000;
+
+    let b = map.get(key);
 
     if (!b) {
       b = {
-        ts: key, open: t.price, high: t.price,
-        low: t.price, close: t.price,
-        volume: 0, delta: 0, levels: new Map(),
-        vwap: 0, cvd: 0
+        ts: key,
+        open: t.price,
+        high: t.price,
+        low: t.price,
+        close: t.price,
+        volume: 0,
+        delta: 0,
+        vwap: 0,
+        cvd: 0,
+        levels: new Map()
       };
-      m.set(key, b);
+      map.set(key, b);
     }
 
     b.high = Math.max(b.high, t.price);
@@ -138,67 +191,91 @@ function aggregate(data, sec) {
     const sign = t.side === "BUY" ? 1 : -1;
     b.delta += sign * t.size;
 
-    const k = Math.round(t.price / TICK);
-    const lev = b.levels.get(k) || { buy: 0, sell: 0 };
-    lev[t.side === "BUY" ? "buy" : "sell"] += t.size;
-    b.levels.set(k, lev);
+    const tick = Math.round(t.price / TICK);
+    const level = b.levels.get(tick) || {
+      buy: 0, sell: 0
+    };
 
-    cumPV += t.price * t.size;
-    cumVol += t.size;
-    cumDelta += sign * t.size;
-    b.vwap = cumPV / cumVol;
-    b.cvd = cumDelta;
+    if (sign > 0) level.buy += t.size;
+    else level.sell += t.size;
+
+    b.levels.set(tick, level);
+
+    cumulativePV += t.price * t.size;
+    cumulativeVolume += t.size;
+    cumulativeDelta += sign * t.size;
+
+    b.vwap = cumulativePV / cumulativeVolume;
+    b.cvd = cumulativeDelta;
   }
-  return [...m.values()].sort((a, b) => a.ts - b.ts);
+
+  return [...map.values()].sort((a, b) => a.ts - b.ts);
 }
 
-function canvasSetup(id) {
-  const c = $(id);
-  const dpr = window.devicePixelRatio || 1;
-  const rect = c.getBoundingClientRect();
+/* ---------- CANVAS HELPERS ---------- */
+
+function setupCanvas(id) {
+  const canvas = $(id);
+  const rect = canvas.getBoundingClientRect();
   if (!rect.width || !rect.height) return null;
 
-  c.width = Math.floor(rect.width * dpr);
-  c.height = Math.floor(rect.height * dpr);
-  const ctx = c.getContext("2d");
-  ctx.scale(dpr, dpr);
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = Math.round(rect.width * ratio);
+  canvas.height = Math.round(rect.height * ratio);
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(ratio, ratio);
+
   return { ctx, w: rect.width, h: rect.height };
 }
 
-function line(ctx, x1, y1, x2, y2, color = "#34404b", width = 1) {
+function line(ctx, x1, y1, x2, y2, color, width = 1) {
+  ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = width;
-  ctx.beginPath();
   ctx.moveTo(x1, y1);
   ctx.lineTo(x2, y2);
   ctx.stroke();
 }
 
+/* ---------- CANDLESTICK + VWAP ---------- */
+
 function drawPrice() {
-  const s = canvasSetup("priceCanvas");
+  const s = setupCanvas("priceCanvas");
   if (!s || !visible.length) return;
 
   const { ctx, w, h } = s;
   const data = visible.slice(-100);
-  const lo = Math.min(...data.map(x => x.low)) - 1;
-  const hi = Math.max(...data.map(x => x.high)) + 1;
-  const top = 15, bottom = h - 25, left = 12, right = w - 67;
-  const y = p => top + (hi - p) / (hi - lo) * (bottom - top);
+
+  const low = Math.min(...data.map(b => b.low)) - 1;
+  const high = Math.max(...data.map(b => b.high)) + 1;
+
+  const top = 15, bottom = h - 25;
+  const left = 12, right = w - 70;
+
+  const y = p =>
+    top + (high - p) / (high - low) * (bottom - top);
 
   ctx.font = "11px monospace";
-  for (let i = 0; i < 6; i++) {
-    const p = lo + (hi - lo) * i / 5, yy = y(p);
-    line(ctx, left, yy, right, yy, "#25313b");
-    ctx.fillStyle = "#8d9aaa";
-    ctx.fillText(fmt(p), right + 6, yy + 3);
+
+  for (let i = 0; i <= 5; i++) {
+    const price = low + (high - low) * i / 5;
+    const yy = y(price);
+    line(ctx, left, yy, right, yy, "#27323d");
+    ctx.fillStyle = "#91a0ae";
+    ctx.fillText(fmt(price), right + 6, yy + 3);
   }
 
   const step = (right - left) / data.length;
+
   data.forEach((b, i) => {
     const x = left + (i + .5) * step;
-    const col = b.close >= b.open ? "#37c49b" : "#f1737b";
-    line(ctx, x, y(b.high), x, y(b.low), col);
-    ctx.fillStyle = col;
+    const color =
+      b.close >= b.open ? "#39c9a0" : "#f1737b";
+
+    line(ctx, x, y(b.high), x, y(b.low), color);
+
+    ctx.fillStyle = color;
     ctx.fillRect(
       x - Math.max(1, step * .3),
       Math.min(y(b.open), y(b.close)),
@@ -208,130 +285,376 @@ function drawPrice() {
   });
 
   ctx.beginPath();
+
   data.forEach((b, i) => {
     const x = left + (i + .5) * step;
-    if (i) ctx.lineTo(x, y(b.vwap));
-    else ctx.moveTo(x, y(b.vwap));
+    if (i === 0) ctx.moveTo(x, y(b.vwap));
+    else ctx.lineTo(x, y(b.vwap));
   });
+
   ctx.strokeStyle = "#d6ae63";
-  ctx.lineWidth = 1.6;
+  ctx.lineWidth = 1.7;
   ctx.stroke();
+
   ctx.fillStyle = "#d6ae63";
-  ctx.fillText("VWAP", left + 7, top + 10);
+  ctx.fillText("VWAP", 16, 18);
 }
 
+/* ---------- CVD ---------- */
+
 function drawCVD() {
-  const s = canvasSetup("cvdCanvas");
+  const s = setupCanvas("cvdCanvas");
   if (!s || !visible.length) return;
 
   const { ctx, w, h } = s;
   const data = visible.slice(-100);
+
   const min = Math.min(0, ...data.map(b => b.cvd));
   const max = Math.max(0, ...data.map(b => b.cvd));
-  const rng = max - min || 1, pad = 22;
+  const range = max - min || 1;
+  const pad = 23;
 
   for (let i = 0; i < 4; i++) {
-    const yy = pad + (h - pad * 2) * i / 3;
-    line(ctx, 8, yy, w - 10, yy, "#26323d");
+    const yy = pad + i * (h - 2 * pad) / 3;
+    line(ctx, 10, yy, w - 10, yy, "#27323d");
   }
 
   ctx.beginPath();
+
   data.forEach((b, i) => {
-    const x = 12 + i * (w - 26) / Math.max(1, data.length - 1);
-    const y = pad + (max - b.cvd) / rng * (h - pad * 2);
-    if (i) ctx.lineTo(x, y);
-    else ctx.moveTo(x, y);
+    const x = 12 + i * (w - 26) /
+      Math.max(1, data.length - 1);
+
+    const y = pad +
+      (max - b.cvd) / range * (h - 2 * pad);
+
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   });
+
   ctx.strokeStyle = "#d6ae63";
   ctx.lineWidth = 2;
   ctx.stroke();
-  ctx.fillStyle = "#b5c0cb";
+
+  ctx.fillStyle = "#c2cbd4";
   ctx.font = "11px monospace";
-  ctx.fillText("CVD: " + fmt(data.at(-1).cvd, 0), 14, 15);
+  ctx.fillText(
+    "CVD: " + signed(data.at(-1).cvd), 14, 15
+  );
+}
+
+/* ---------- ADVANCED FOOTPRINT ---------- */
+
+function imbalanceForBar(bar) {
+  const output = new Map();
+  const threshold = FP.ratio / 100;
+
+  for (const [tick, qty] of bar.levels) {
+    const belowBid =
+      bar.levels.get(tick - 1)?.sell || 0;
+
+    const aboveAsk =
+      bar.levels.get(tick + 1)?.buy || 0;
+
+    const buy =
+      qty.buy >= FP.minVolume &&
+      belowBid > 0 &&
+      qty.buy / belowBid >= threshold;
+
+    const sell =
+      qty.sell >= FP.minVolume &&
+      aboveAsk > 0 &&
+      qty.sell / aboveAsk >= threshold;
+
+    output.set(tick, {
+      buy, sell,
+      stackedBuy: false,
+      stackedSell: false
+    });
+  }
+
+  const ticks = [...output.keys()].sort((a, b) => a - b);
+
+  for (const side of ["buy", "sell"]) {
+    let run = [];
+
+    function markRun() {
+      if (run.length < FP.stack) return;
+
+      for (const tick of run) {
+        output.get(tick)[
+          side === "buy" ? "stackedBuy" : "stackedSell"
+        ] = true;
+      }
+    }
+
+    for (const tick of ticks) {
+      const qualifies = output.get(tick)[side];
+
+      if (
+        qualifies &&
+        (!run.length || tick === run.at(-1) + 1)
+      ) {
+        run.push(tick);
+      } else {
+        markRun();
+        run = qualifies ? [tick] : [];
+      }
+    }
+    markRun();
+  }
+
+  return output;
+}
+
+function getBarPOC(bar) {
+  let poc = null, max = -1;
+
+  for (const [tick, q] of bar.levels) {
+    const vol = q.buy + q.sell;
+    if (vol > max) {
+      max = vol;
+      poc = tick;
+    }
+  }
+  return poc;
+}
+
+function createFootprintControls() {
+  if ($("fpAdvancedControls")) return;
+
+  const controls = document.createElement("div");
+  controls.id = "fpAdvancedControls";
+  controls.className = "fp-controls";
+
+  controls.innerHTML = `
+    <label>Imbalance
+      <select id="fpRatio">
+        <option value="200">200%</option>
+        <option value="300" selected>300%</option>
+        <option value="400">400%</option>
+        <option value="500">500%</option>
+      </select>
+    </label>
+
+    <label>Min Volume
+      <input id="fpMinVol"
+        type="number" min="1" value="10">
+    </label>
+
+    <label>Stack
+      <select id="fpStack">
+        <option value="2">2 levels</option>
+        <option value="3" selected>3 levels</option>
+        <option value="4">4 levels</option>
+      </select>
+    </label>
+
+    <label>
+      <input id="fpHighlight"
+        type="checkbox" checked>
+      Highlight
+    </label>
+
+    <span class="fp-legend">
+      Green = Buy | Red = Sell | Gold = POC
+    </span>
+  `;
+
+  const grid = $("footprintGrid");
+  grid.parentElement.insertBefore(controls, grid);
+
+  ["fpRatio", "fpMinVol", "fpStack", "fpHighlight"]
+    .forEach(id => {
+      $(id).addEventListener("change", () => {
+        FP.ratio = Number($("fpRatio").value);
+        FP.minVolume = Math.max(
+          1, Number($("fpMinVol").value) || 1
+        );
+        FP.stack = Number($("fpStack").value);
+        drawFootprint();
+      });
+    });
 }
 
 function drawFootprint() {
-  const subset = visible.slice(-8);
-  const levels = [
-    ...new Set(subset.flatMap(b => [...b.levels.keys()]))
-  ].sort((a, b) => b - a).slice(0, 100);
+  createFootprintControls();
 
-  let html = '<table class="fpTable"><thead><tr><th>Price</th>';
-  html += subset.map(b =>
-    "<th>" + new Date(b.ts).toISOString().slice(11, 16) + "</th>"
-  ).join("");
+  const target = $("footprintGrid");
+  const data = visible.slice(-8);
+
+  if (!data.length) {
+    target.textContent = "No data";
+    return;
+  }
+
+  const mode = $("fpMode").value;
+  const highlight = $("fpHighlight").checked;
+
+  const levels = [
+    ...new Set(
+      data.flatMap(b => [...b.levels.keys()])
+    )
+  ]
+    .sort((a, b) => b - a)
+    .slice(0, FP.maxLevels);
+
+  const imbalance = data.map(imbalanceForBar);
+  const barPOCs = data.map(getBarPOC);
+
+  let html = '<table class="fpTable fpAdvanced">';
+  html += '<thead><tr><th>PRICE</th>';
+
+  data.forEach(b => {
+    const time = new Date(b.ts)
+      .toISOString().slice(11, 16);
+
+    html += `
+      <th>${time}
+        <div class="fp-bar-delta ${
+          b.delta >= 0 ? "fp-pos" : "fp-neg"
+        }">
+          Δ ${signed(b.delta)}
+        </div>
+      </th>
+    `;
+  });
+
   html += "</tr></thead><tbody>";
 
-  for (const level of levels) {
-    html += '<tr><td class="level">' + fmt(level * TICK) + "</td>";
+  for (const tick of levels) {
+    html += `<tr><td class="level">${
+      fmt(tick * TICK)
+    }</td>`;
 
-    for (const b of subset) {
-      const l = b.levels.get(level);
-      if (!l) {
+    data.forEach((bar, i) => {
+      const q = bar.levels.get(tick);
+
+      if (!q) {
         html += '<td class="flat">·</td>';
-        continue;
+        return;
       }
-      const val = $("fpMode").value === "delta"
-        ? String(l.buy - l.sell)
-        : `${l.sell} × ${l.buy}`;
 
-      const cls = l.buy > l.sell ? "buy" :
-                  l.sell > l.buy ? "sell" : "flat";
-      html += `<td class="${cls}">${val}</td>`;
-    }
+      const im = imbalance[i].get(tick) || {};
+      const classes = ["fp-cell"];
+
+      if (q.buy > q.sell) classes.push("buy");
+      else if (q.sell > q.buy) classes.push("sell");
+      else classes.push("flat");
+
+      if (barPOCs[i] === tick) {
+        classes.push("fp-poc");
+      }
+
+      if (highlight) {
+        if (im.buy) classes.push("fp-imb-buy");
+        if (im.sell) classes.push("fp-imb-sell");
+
+        if (im.stackedBuy) {
+          classes.push("fp-stacked-buy");
+        }
+        if (im.stackedSell) {
+          classes.push("fp-stacked-sell");
+        }
+      }
+
+      const content = mode === "delta"
+        ? signed(q.buy - q.sell)
+        : `${q.sell} × ${q.buy}`;
+
+      const marker = highlight
+        ? (im.stackedBuy ? " ▲" : "") +
+          (im.stackedSell ? " ▼" : "")
+        : "";
+
+      html += `
+        <td class="${classes.join(" ")}"
+          title="Bid ${q.sell} | Ask ${q.buy}
+          | Delta ${q.buy - q.sell}
+          | POC ${barPOCs[i] === tick}">
+          ${content}${marker}
+        </td>
+      `;
+    });
+
     html += "</tr>";
   }
-  $("footprintGrid").innerHTML = html + "</tbody></table>";
+
+  target.innerHTML = html + "</tbody></table>";
 }
 
+/* ---------- VOLUME PROFILE ---------- */
+
 function drawProfile() {
-  const m = new Map();
-  for (const b of visible) {
-    for (const [p, l] of b.levels) {
-      m.set(p, (m.get(p) || 0) + l.buy + l.sell);
+  const profile = new Map();
+
+  for (const bar of visible) {
+    for (const [tick, q] of bar.levels) {
+      const old = profile.get(tick) || 0;
+      profile.set(tick, old + q.buy + q.sell);
     }
   }
 
-  const list = [...m].sort((a, b) => b[0] - a[0]);
-  const max = Math.max(1, ...m.values());
-  const poc = [...m].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const rows = [...profile].sort((a, b) => b[0] - a[0]);
+  const max = Math.max(1, ...profile.values());
 
-  $("profileRows").innerHTML = list.map(([p, v]) =>
-    `<div class="profrow ${p === poc ? "poc" : ""}">
-      <span>${fmt(p * TICK)}</span>
-      <div class="track"><div class="fill"
-        style="width:${100 * v / max}%"></div></div>
-      <em>${v}</em>
-    </div>`
-  ).join("");
+  const poc = [...profile]
+    .sort((a, b) => b[1] - a[1])[0]?.[0];
 
-  return poc === undefined ? null : poc * TICK;
+  $("profileRows").innerHTML = rows.map(([tick, vol]) => `
+    <div class="profrow ${tick === poc ? "poc" : ""}">
+      <span>${fmt(tick * TICK)}</span>
+      <div class="track">
+        <div class="fill"
+          style="width:${100 * vol / max}%">
+        </div>
+      </div>
+      <em>${vol}</em>
+    </div>
+  `).join("");
+
+  return poc == null ? null : poc * TICK;
 }
+
+/* ---------- RENDER ---------- */
 
 function render() {
   if (!trades.length) return;
 
   bars = aggregate(trades, Number($("barSize").value));
-  const end = Math.max(
-    1, Math.round(bars.length * Number($("replay").value) / 100)
-  );
-  visible = bars.slice(0, end);
 
+  const end = Math.max(
+    1,
+    Math.round(
+      bars.length * Number($("replay").value) / 100
+    )
+  );
+
+  visible = bars.slice(0, end);
   const last = visible.at(-1);
-  const vol = visible.reduce((a, b) => a + b.volume, 0);
+
+  const volume = visible.reduce(
+    (sum, b) => sum + b.volume, 0
+  );
+
   const poc = drawProfile();
 
   $("lastPrice").textContent = fmt(last.close);
-  $("totalVol").textContent = fmt(vol, 0);
-  $("deltaStat").textContent = fmt(last.cvd, 0);
+  $("totalVol").textContent = fmt(volume, 0);
+  $("deltaStat").textContent = signed(last.cvd);
+
   $("deltaStat").style.color =
     last.cvd >= 0 ? "#39c9a0" : "#f1737b";
-  $("pocStat").textContent = poc === null ? "—" : fmt(poc);
+
+  $("pocStat").textContent =
+    poc == null ? "—" : fmt(poc);
+
   $("vwapStat").textContent = fmt(last.vwap);
 
   $("replayInfo").textContent =
     `${end}/${bars.length} bars · ` +
-    new Date(last.ts).toISOString().slice(0, 16).replace("T", " ") +
+    new Date(last.ts).toISOString()
+      .slice(0, 16).replace("T", " ") +
     " UTC";
 
   drawPrice();
@@ -339,135 +662,225 @@ function render() {
   drawFootprint();
 
   $("dataStatus").textContent =
-    `${source}: ${fmt(trades.length, 0)} trade prints, ` +
-    `${bars.length} bars. Time range ` +
-    `${new Date(trades[0].ts).toISOString()} – ` +
-    `${new Date(trades.at(-1).ts).toISOString()}.`;
+    `${source} | ${trades.length} trade prints | ` +
+    `${bars.length} bars | ` +
+    new Date(trades[0].ts).toISOString() +
+    " to " +
+    new Date(trades.at(-1).ts).toISOString();
 }
 
-function backtest() {
+/* ---------- QUANT BACKTESTER ---------- */
+
+function runBacktest() {
   const data = bars;
-  const hold = Math.max(1, Math.floor(Number($("holdBars").value) || 3));
-  const slip = Math.max(0, Number($("slipTicks").value) || 0) * TICK;
-  const fee = Math.max(0, Number($("commission").value) || 0);
-  const qty = Math.max(1, Math.floor(Number($("contracts").value) || 1));
-  let results = [];
+
+  const hold = Math.max(
+    1, Math.floor(Number($("holdBars").value) || 3)
+  );
+
+  const slippage = Math.max(
+    0, Number($("slipTicks").value) || 0
+  ) * TICK;
+
+  const commission = Math.max(
+    0, Number($("commission").value) || 0
+  );
+
+  const contracts = Math.max(
+    1, Math.floor(Number($("contracts").value) || 1)
+  );
+
+  const results = [];
 
   for (let i = 1; i < data.length - 1;) {
-    const prev = data[i - 1], cur = data[i];
-    let dir =
-      prev.close <= prev.vwap && cur.close > cur.vwap ? 1 :
-      prev.close >= prev.vwap && cur.close < cur.vwap ? -1 : 0;
+    const previous = data[i - 1];
+    const current = data[i];
 
-    if (!dir) { i++; continue; }
+    const direction =
+      previous.close <= previous.vwap &&
+      current.close > current.vwap ? 1 :
+      previous.close >= previous.vwap &&
+      current.close < current.vwap ? -1 : 0;
+
+    if (!direction) {
+      i++;
+      continue;
+    }
 
     const entryIndex = i + 1;
-    const exitIndex = Math.min(entryIndex + hold, data.length - 1);
-    if (exitIndex <= entryIndex) break;
+    const exitIndex = entryIndex + hold;
 
-    const entry = data[entryIndex].open + dir * slip;
-    const exit = data[exitIndex].open - dir * slip;
-    const net = (exit - entry) * dir * 100 * qty - fee * qty;
+    if (exitIndex >= data.length) break;
+
+    const entry =
+      data[entryIndex].open + direction * slippage;
+
+    const exit =
+      data[exitIndex].open - direction * slippage;
+
+    const net =
+      (exit - entry) * direction *
+      POINT_VALUE * contracts -
+      commission * contracts;
 
     results.push({
       time: new Date(data[entryIndex].ts)
-        .toISOString().slice(0, 16).replace("T", " "),
-      side: dir === 1 ? "LONG" : "SHORT",
-      entry, exit,
-      bars: exitIndex - entryIndex,
+        .toISOString().slice(0, 16),
+      side: direction > 0 ? "LONG" : "SHORT",
+      entry,
+      exit,
+      bars: hold,
       net
     });
+
     i = exitIndex + 1;
   }
 
-  const net = results.reduce((a, b) => a + b.net, 0);
-  const wins = results.filter(x => x.net > 0);
-  const gp = wins.reduce((a, b) => a + b.net, 0);
-  const gl = -results.filter(x => x.net < 0)
-    .reduce((a, b) => a + b.net, 0);
+  const total = results.reduce(
+    (sum, x) => sum + x.net, 0
+  );
+
+  const winners = results.filter(x => x.net > 0);
+
+  const grossProfit = winners.reduce(
+    (sum, x) => sum + x.net, 0
+  );
+
+  const grossLoss = -results
+    .filter(x => x.net < 0)
+    .reduce((sum, x) => sum + x.net, 0);
 
   const metrics = [
-    ["NET P&L", "$" + fmt(net, 2)],
+    ["NET P&L", "$" + fmt(total, 2)],
     ["TRADES", String(results.length)],
     ["WIN RATE", results.length
-      ? fmt(100 * wins.length / results.length, 1) + "%" : "—"],
-    ["PROFIT FACTOR", gl ? fmt(gp / gl, 2) : gp ? "∞" : "—"],
+      ? fmt(winners.length / results.length * 100, 1) + "%"
+      : "—"],
+    ["PROFIT FACTOR", grossLoss
+      ? fmt(grossProfit / grossLoss, 2)
+      : grossProfit ? "∞" : "—"],
     ["AVG TRADE", results.length
-      ? "$" + fmt(net / results.length, 2) : "—"]
+      ? "$" + fmt(total / results.length, 2)
+      : "—"]
   ];
 
-  $("btStats").innerHTML = metrics.map(([k, v]) =>
-    `<article><small>${k}</small><strong>${v}</strong></article>`
-  ).join("");
+  $("btStats").innerHTML = metrics.map(([name, value]) => `
+    <article>
+      <small>${name}</small>
+      <strong>${value}</strong>
+    </article>
+  `).join("");
 
-  $("btRows").innerHTML = results.map(x =>
-    `<tr><td>${x.time}</td><td>${x.side}</td>
-    <td>${fmt(x.entry)}</td><td>${fmt(x.exit)}</td>
-    <td>${x.bars}</td>
-    <td style="color:${x.net >= 0 ? "#39c9a0" : "#f1737b"}">
-      $${fmt(x.net, 2)}</td></tr>`
-  ).join("") || '<tr><td colspan="6">No trades under this rule.</td></tr>';
+  $("btRows").innerHTML = results.map(x => `
+    <tr>
+      <td>${x.time} UTC</td>
+      <td>${x.side}</td>
+      <td>${fmt(x.entry)}</td>
+      <td>${fmt(x.exit)}</td>
+      <td>${x.bars}</td>
+      <td style="color:${
+        x.net >= 0 ? "#39c9a0" : "#f1737b"
+      }">
+        $${fmt(x.net, 2)}
+      </td>
+    </tr>
+  `).join("") ||
+    '<tr><td colspan="6">No completed trades</td></tr>';
 }
 
-function load(data, label) {
+/* ---------- DATA LOADING ---------- */
+
+function loadData(data, label) {
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+    $("playBtn").textContent = "▶ Play";
+  }
+
   trades = data;
   source = label;
+
   $("sourceBadge").textContent = label;
   $("replay").value = 100;
+
   render();
-  backtest();
+  runBacktest();
 }
 
-$("fileInput").addEventListener("change", async e => {
-  const f = e.target.files[0];
-  if (!f) return;
+$("fileInput").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
   try {
-    const parsed = parseCSV(await f.text());
-    load(parsed, "IMPORTED CSV");
-    alert(`Loaded ${parsed.length} trade prints. Data stays in this browser tab.`);
-  } catch (err) {
-    alert("CSV import failed: " + err.message);
+    const data = parseCSV(await file.text());
+    loadData(data, "IMPORTED CSV");
+
+    alert(
+      `${data.length} trade prints imported successfully.`
+    );
+  } catch (error) {
+    alert("CSV import failed: " + error.message);
   }
-  e.target.value = "";
+
+  event.target.value = "";
 });
 
-$("demoBtn").onclick = () => load(demo(), "SYNTHETIC DEMO");
+$("demoBtn").onclick = () =>
+  loadData(makeDemo(), "SYNTHETIC DEMO");
 
 $("barSize").onchange = () => {
   render();
-  backtest();
+  runBacktest();
 };
+
 $("fpMode").onchange = drawFootprint;
 $("replay").oninput = render;
-$("runBacktest").onclick = backtest;
+$("runBacktest").onclick = runBacktest;
 
-for (const b of document.querySelectorAll(".nav")) {
-  b.onclick = () => {
-    document.querySelectorAll(".nav").forEach(n =>
-      n.classList.remove("active")
-    );
-    b.classList.add("active");
-    document.querySelectorAll(".panel").forEach(n =>
-      n.classList.add("hidden")
-    );
-    $(b.dataset.panel).classList.remove("hidden");
+/* ---------- NAVIGATION ---------- */
 
-    $("panelTitle").textContent = {
+document.querySelectorAll(".nav").forEach(button => {
+  button.onclick = () => {
+    document.querySelectorAll(".nav").forEach(b =>
+      b.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    document.querySelectorAll(".panel").forEach(p =>
+      p.classList.add("hidden")
+    );
+
+    const name = button.dataset.panel;
+    $(name).classList.remove("hidden");
+
+    const titles = {
       terminal: "Order Flow Terminal",
       quant: "Quant Backtester",
       data: "Data Manager"
-    }[b.dataset.panel];
+    };
 
-    $("panelSubtitle").textContent = {
-      terminal: "Historical GC trade prints · Footprint · CVD · Volume Profile",
-      quant: "Historical strategy research · Cost-aware simulations",
-      data: "Import licensed trade prints · Browser-local data"
-    }[b.dataset.panel];
+    const descriptions = {
+      terminal:
+        "GC Historical Trades · Advanced Footprint · CVD",
+      quant:
+        "Historical Strategy Research · Cost-Aware Backtesting",
+      data:
+        "Historical CSV Import · Data Export"
+    };
 
-    if (b.dataset.panel === "terminal") requestAnimationFrame(render);
-    if (b.dataset.panel === "quant") backtest();
+    $("panelTitle").textContent = titles[name];
+    $("panelSubtitle").textContent = descriptions[name];
+
+    if (name === "terminal") {
+      requestAnimationFrame(render);
+    }
+
+    if (name === "quant") runBacktest();
   };
-}
+});
+
+/* ---------- REPLAY ---------- */
 
 $("playBtn").onclick = () => {
   if (timer) {
@@ -476,13 +889,21 @@ $("playBtn").onclick = () => {
     $("playBtn").textContent = "▶ Play";
     return;
   }
-  if (+$("replay").value >= 100) $("replay").value = 1;
+
+  if (+$("replay").value >= 100) {
+    $("replay").value = 1;
+  }
+
   $("playBtn").textContent = "Ⅱ Pause";
 
   timer = setInterval(() => {
-    const next = Math.min(100, +$("replay").value + 1);
+    const next = Math.min(
+      100, Number($("replay").value) + 1
+    );
+
     $("replay").value = next;
     render();
+
     if (next >= 100) {
       clearInterval(timer);
       timer = null;
@@ -491,22 +912,33 @@ $("playBtn").onclick = () => {
   }, 180);
 };
 
+/* ---------- EXPORT ---------- */
+
 $("exportBtn").onclick = () => {
-  const lines = [
+  const rows = [
     "timestamp,price,size,side",
     ...trades.map(t =>
-      `${new Date(t.ts).toISOString()},${t.price},${t.size},${t.side}`
+      `${new Date(t.ts).toISOString()},` +
+      `${t.price},${t.size},${t.side}`
     )
   ];
-  const url = URL.createObjectURL(
-    new Blob([lines.join("\n")], { type: "text/csv" })
+
+  const blob = new Blob(
+    [rows.join("\n")],
+    { type: "text/csv;charset=utf-8" }
   );
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "tar-quantflow-trades.csv";
-  a.click();
+
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+
+  anchor.href = url;
+  anchor.download = "tar-quantflow-trades.csv";
+  anchor.click();
+
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
+
+/* ---------- RESPONSIVE ---------- */
 
 window.addEventListener("resize", () => {
   if (!$("terminal").classList.contains("hidden")) {
@@ -515,4 +947,6 @@ window.addEventListener("resize", () => {
   }
 });
 
-load(demo(), "SYNTHETIC DEMO");
+/* ---------- START ---------- */
+
+loadData(makeDemo(), "SYNTHETIC DEMO");
