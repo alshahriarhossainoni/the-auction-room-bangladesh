@@ -83,36 +83,73 @@ function clampChart(){chartView.count=Math.max(5,Math.min(500,Math.round(chartVi
 function chartWindow(){clampChart();const end=Math.max(1,shown.length-chartView.offset);return shown.slice(Math.max(0,end-chartView.count),end);}
 function refreshPrice(){if(!shown.length)return;const last=shown.at(-1);const current=shown.filter(b=>b.session===last.session);drawPrice(dataMode==='OHLCV'?estimatedProfile(current):profileData(current));updateZoomLabel();}
 function updateZoomLabel(){const el=$('zoomInfo');if(el)el.textContent=chartView.count+' bars · '+(chartView.offset?'pan '+chartView.offset:'latest');}
+// v0.8: session-aligned profiles drawn inside the main price chart.
+// For OHLCV, each bar volume is distributed uniformly across its high-low range.
+function dailyProfileFor(data){return dataMode==='OHLCV'?estimatedProfile(data):profileData(data);}
 function drawPrice(session){
  const c=setup('priceCanvas');if(!c||!shown.length)return;
  const {ctx,w,h}=c,a=chartWindow();if(!a.length)return;
- const left=16,right=w-78,top=22,bottom=h-40,plotH=bottom-top,plotW=right-left;
+ const left=58,right=w-86,top=26,bottom=h-43,plotH=bottom-top,plotW=right-left;
  const rawLow=Math.min(...a.map(b=>b.low)),rawHigh=Math.max(...a.map(b=>b.high));
  const center=(rawLow+rawHigh)/2+chartView.priceShift;
- const span=Math.max(TICK*8,(rawHigh-rawLow+TICK*6)/chartView.scale);
+ const span=Math.max(TICK*8,(rawHigh-rawLow+TICK*8)/chartView.scale);
  const low=center-span/2,high=center+span/2;
  const y=p=>top+(high-p)/span*plotH;
  const x=i=>left+(i+.5)*plotW/a.length;
  const step=plotW/a.length,footprint=dataMode==='TICKS'&&$('chartMode').value==='candle';
+ const white=$('candleTheme').value==='white';
+ ctx.fillStyle='#090b10';ctx.fillRect(0,0,w,h);
  ctx.font='11px ui-monospace,monospace';ctx.textAlign='left';
- for(let i=0;i<=6;i++){
-  const price=low+span*i/6,yy=y(price);
-  stroke(ctx,left,yy,right,yy,'#273440');ctx.fillStyle='#a4b1bf';ctx.fillText(money(price),right+7,yy+4);
+ for(let i=0;i<=7;i++){
+  const price=low+span*i/7,yy=y(price);
+  stroke(ctx,left,yy,right,yy,'#24272e');ctx.fillStyle='#8e929b';ctx.fillText(money(price),right+8,yy+4);
  }
- if(session){
-  for(const [key,label,color] of [['poc','POC','#d9b568'],['vah','VAH','#32c9a2'],['val','VAL','#f27884']]){
-   const v=session[key];if(v==null)continue;const yy=y(v*TICK);
-   if(yy<top||yy>bottom)continue;
-   ctx.setLineDash([5,5]);stroke(ctx,left,yy,right,yy,color);ctx.setLineDash([]);
-   ctx.fillStyle=color;ctx.fillText(label+' '+money(v*TICK),left+5,yy-5);
+ // Visible session boundaries and per-session histogram anchored to first candle.
+ const groups=[];
+ a.forEach((b,i)=>{let g=groups.at(-1);if(!g||g.key!==b.session){g={key:b.session,first:i,last:i};groups.push(g);}else g.last=i;});
+ const enabled=$('dailyProfiles').checked;
+ const widthFraction=+$('profileWidth').value;
+ const currentKey=shown.at(-1).session;
+ const showCurrent=$('showCurrent').checked;
+ ctx.save();ctx.beginPath();ctx.rect(left,top,plotW,plotH);ctx.clip();
+ // Session boundaries and dates.
+ for(const g of groups){
+  const gx=left+g.first*step;
+  ctx.setLineDash([2,4]);stroke(ctx,gx,top,gx,bottom,'#4b4b54');ctx.setLineDash([]);
+  ctx.font='10px ui-monospace,monospace';ctx.fillStyle='#b7bac3';ctx.fillText(g.key,gx+4,top+13);
+ }
+ if(enabled){
+  // Each profile uses all bars of that session up to replay position, not only the visible window.
+  const sessionBars=new Map();
+  for(const b of shown){if(!groups.some(g=>g.key===b.session))continue;let list=sessionBars.get(b.session);if(!list){list=[];sessionBars.set(b.session,list);}list.push(b);}
+  for(const g of groups){
+   if(g.key===currentKey&&!showCurrent)continue;
+   const profile=dailyProfileFor(sessionBars.get(g.key)||[]);if(!profile)continue;
+   const maxVol=Math.max(1,...profile.arr.map(p=>p[1]));
+   const sessionX=left+g.first*step;
+   const visibleWidth=(g.last-g.first+1)*step;
+   const maxWidth=Math.max(5,visibleWidth*widthFraction);
+   // Session-aligned histogram: purple bars extend rightward from session start.
+   for(const [tick,vol] of profile.arr){
+    const yy=y(tick*TICK);if(yy<top-2||yy>bottom+2)continue;
+    const hh=Math.max(1,Math.min(5,plotH*TICK/span*.92));
+    ctx.fillStyle=tick>=profile.val&&tick<=profile.vah?'rgba(125,33,221,.73)':'rgba(92,26,148,.58)';
+    ctx.fillRect(sessionX,yy-hh/2,Math.max(1,maxWidth*vol/maxVol),hh);
+   }
+   const levelEnd=Math.min(right,sessionX+visibleWidth);
+   for(const [name,tick,color] of [['vah',profile.vah,'#31b951'],['poc',profile.poc,'#e3b84e'],['val',profile.val,'#e45d63']]){
+    const yy=y(tick*TICK);if(yy<top||yy>bottom)continue;
+    ctx.setLineDash(name==='poc'?[]:[4,3]);stroke(ctx,sessionX,yy,levelEnd,yy,color,name==='poc'?1.7:1);ctx.setLineDash([]);
+   }
   }
  }
- ctx.save();ctx.beginPath();ctx.rect(left,top,plotW,plotH);ctx.clip();
+ // Draw candles over volume profile, white / purple theme or classic.
  for(let i=0;i<a.length;i++){
-  const b=a[i],xx=x(i),color=b.close>=b.open?'#32c9a2':'#f27884';
-  stroke(ctx,xx,y(b.high),xx,y(b.low),color);
+  const b=a[i],xx=x(i),up=b.close>=b.open;
+  const color=white?(up?'#f3edf8':'#ae65e8'):(up?'#32c9a2':'#f27884');
+  stroke(ctx,xx,y(b.high),xx,y(b.low),color,1);
   if(!footprint||step<52){
-   ctx.fillStyle=color;ctx.fillRect(xx-step*.32,Math.min(y(b.open),y(b.close)),Math.max(2,step*.64),Math.max(2,Math.abs(y(b.open)-y(b.close))));
+   ctx.fillStyle=color;ctx.fillRect(xx-step*.30,Math.min(y(b.open),y(b.close)),Math.max(1.4,step*.60),Math.max(1,Math.abs(y(b.open)-y(b.close))));
    continue;
   }
   const poc=[...b.levels].sort((v,z)=>(z[1].buy+z[1].sell)-(v[1].buy+v[1].sell))[0]?.[0],imb=imbalance(b);
@@ -130,23 +167,22 @@ function drawPrice(session){
   ctx.textAlign='left';ctx.fillStyle=b.delta>=0?'#32c9a2':'#f27884';ctx.fillText('Δ'+sign(b.delta),xx-step*.35,bottom-7);
  }
  ctx.beginPath();a.forEach((b,i)=>{if(i===0)ctx.moveTo(x(i),y(b.vwap));else ctx.lineTo(x(i),y(b.vwap));});
- ctx.strokeStyle='#e4b75d';ctx.lineWidth=2;ctx.stroke();ctx.restore();
- ctx.fillStyle='#e4b75d';ctx.fillText('VWAP',left+4,top-7);
- // Real time axis: time is taken from each bar timestamp (UTC).
- const stride=Math.max(1,Math.ceil(a.length/Math.max(2,plotW/110)));
- ctx.font='10px ui-monospace,monospace';ctx.fillStyle='#a9b6c4';ctx.textAlign='center';
+ ctx.strokeStyle='#e4b75d';ctx.lineWidth=1.5;ctx.stroke();
+ ctx.restore();
+ ctx.fillStyle='#e4b75d';ctx.font='11px ui-monospace,monospace';ctx.fillText('VWAP',left+4,top-8);
+ const stride=Math.max(1,Math.ceil(a.length/Math.max(2,plotW/105)));
+ ctx.font='10px ui-monospace,monospace';ctx.fillStyle='#9297a1';ctx.textAlign='center';
  for(let i=0;i<a.length;i+=stride){const t=new Date(a[i].ts).toISOString();ctx.fillText(t.slice(11,16),x(i),h-14);}
- // Crosshair, price and timestamp readouts.
  if(chartView.crossX!=null&&chartView.crossY!=null){
   const cx=chartView.crossX,cy=chartView.crossY;
   if(cx>=left&&cx<=right&&cy>=top&&cy<=bottom){
    ctx.setLineDash([3,4]);stroke(ctx,cx,top,cx,bottom,'#8c9cad');stroke(ctx,left,cy,right,cy,'#8c9cad');ctx.setLineDash([]);
    const price=high-(cy-top)/plotH*span;
-   ctx.fillStyle='#d9b568';ctx.fillRect(right+1,cy-10,76,19);
+   ctx.fillStyle='#e3b84e';ctx.fillRect(right+1,cy-10,80,19);
    ctx.fillStyle='#101820';ctx.textAlign='left';ctx.fillText(money(price),right+5,cy+3);
    const idx=Math.max(0,Math.min(a.length-1,Math.floor((cx-left)/step)));
    const t=new Date(a[idx].ts).toISOString().slice(0,16).replace('T',' ');
-   ctx.fillStyle='#d9b568';ctx.fillRect(Math.max(left,cx-64),h-31,130,17);
+   ctx.fillStyle='#e3b84e';ctx.fillRect(Math.max(left,cx-64),h-31,130,17);
    ctx.fillStyle='#101820';ctx.fillText(t+' UTC',Math.max(left,cx-64)+3,h-19);
   }
  }
@@ -200,7 +236,7 @@ $('zoomOut').onclick=()=>{chartView.count=Math.round(chartView.count*1.4);refres
 $('fitChart').onclick=()=>{chartView.count=75;chartView.offset=0;chartView.scale=1;chartView.priceShift=0;refreshPrice();};
 $('goLatest').onclick=()=>{chartView.offset=0;refreshPrice();};
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('fullscreen'))$('full').click();});
-$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if($('importType').value==='ohlcv'){await importMW(f);}else{load(parse(await f.text()),'IMPORTED TICK CSV');$('importProgress').textContent='Tick trades imported.';await saveDataset();}}catch(err){$('importProgress').textContent='Import failed: '+err.message;alert('Import failed: '+err.message);}e.target.value='';};$('demo').onclick=()=>load(demo(),'SYNTHETIC DEMO');['barSize','sessionHour','valueArea','chartMode','fpMode','ratio','minVol','stack'].forEach(id=>$(id).addEventListener('change',render));$('replay').oninput=render;$('play').onclick=()=>{if(playing){clearInterval(playing);playing=null;$('play').textContent='▶ Play';return;}if(+$('replay').value>=100)$('replay').value=1;$('play').textContent='Ⅱ Pause';playing=setInterval(()=>{const n=Math.min(100,+$('replay').value+1);$('replay').value=n;render();if(n===100){clearInterval(playing);playing=null;$('play').textContent='▶ Play';}},180);};$('full').onclick=()=>{document.body.classList.toggle('fullscreen');$('full').textContent=document.body.classList.contains('fullscreen')?'⛶ Exit Full Screen':'⛶ Full Screen';setTimeout(render,60);};$('run').onclick=backtest;document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x===b));for(const id of ['terminal','quant','data'])$(id).hidden=id!==b.dataset.tab;$('title').textContent={terminal:'Order Flow Terminal',quant:'Quant Backtester',data:'Data Manager'}[b.dataset.tab];if(b.dataset.tab==='terminal')requestAnimationFrame(render);if(b.dataset.tab==='quant')backtest();});$('export').onclick=()=>{if(dataMode==='OHLCV'){alert('OHLCV is not tick trade data. Original MotiveWave file remains on your computer.');return;}const data=['timestamp,price,size,side',...trades.map(t=>`${new Date(t.ts).toISOString()},${t.price},${t.size},${t.side}`)].join('\n');const url=URL.createObjectURL(new Blob([data],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download='tar-quantflow-trades.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};window.addEventListener('resize',()=>{if(!$('terminal').hidden)render();});load(demo(),'SYNTHETIC DEMO');
+$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if($('importType').value==='ohlcv'){await importMW(f);}else{load(parse(await f.text()),'IMPORTED TICK CSV');$('importProgress').textContent='Tick trades imported.';await saveDataset();}}catch(err){$('importProgress').textContent='Import failed: '+err.message;alert('Import failed: '+err.message);}e.target.value='';};$('demo').onclick=()=>load(demo(),'SYNTHETIC DEMO');['barSize','sessionHour','valueArea','chartMode','fpMode','ratio','minVol','stack','dailyProfiles','profileWidth','showCurrent','candleTheme'].forEach(id=>$(id).addEventListener('change',render));$('replay').oninput=render;$('play').onclick=()=>{if(playing){clearInterval(playing);playing=null;$('play').textContent='▶ Play';return;}if(+$('replay').value>=100)$('replay').value=1;$('play').textContent='Ⅱ Pause';playing=setInterval(()=>{const n=Math.min(100,+$('replay').value+1);$('replay').value=n;render();if(n===100){clearInterval(playing);playing=null;$('play').textContent='▶ Play';}},180);};$('full').onclick=()=>{document.body.classList.toggle('fullscreen');$('full').textContent=document.body.classList.contains('fullscreen')?'⛶ Exit Full Screen':'⛶ Full Screen';setTimeout(render,60);};$('run').onclick=backtest;document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x===b));for(const id of ['terminal','quant','data'])$(id).hidden=id!==b.dataset.tab;$('title').textContent={terminal:'Order Flow Terminal',quant:'Quant Backtester',data:'Data Manager'}[b.dataset.tab];if(b.dataset.tab==='terminal')requestAnimationFrame(render);if(b.dataset.tab==='quant')backtest();});$('export').onclick=()=>{if(dataMode==='OHLCV'){alert('OHLCV is not tick trade data. Original MotiveWave file remains on your computer.');return;}const data=['timestamp,price,size,side',...trades.map(t=>`${new Date(t.ts).toISOString()},${t.price},${t.size},${t.side}`)].join('\n');const url=URL.createObjectURL(new Blob([data],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download='tar-quantflow-trades.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};window.addEventListener('resize',()=>{if(!$('terminal').hidden)render();});load(demo(),'SYNTHETIC DEMO');
 
 
 /* v0.7: persistent local historical datasets via IndexedDB */

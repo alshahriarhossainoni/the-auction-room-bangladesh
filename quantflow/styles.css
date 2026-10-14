@@ -7,3 +7,7 @@
 #priceCanvas{cursor:crosshair;touch-action:none}#priceCanvas:active{cursor:grabbing}body.fullscreen .pricecard{width:100%}
 
 #storageStatus{padding:12px 14px;border:1px solid #5b4b2d;border-radius:6px;color:#e1c17e;background:#191a17;line-height:1.5}#saveDataset,#restoreDataset,#clearDataset{white-space:nowrap}
+
+/* v0.8 purple daily volume profile theme */
+:root{--bg:#090b10;--panel:#101116;--border:#292b34;--gold:#e3b84e}
+body{background:#090b10}.card{background:#101116}.canvasbox{height:580px}.pricecard{grid-column:1/-1}.pricecard .canvasbox{height:600px}.charts{grid-template-columns:minmax(0,2fr) minmax(290px,1fr)}.profile-toggle{white-space:nowrap}input[type=checkbox]{accent-color:#9b39eb}button:hover{border-color:#9b39eb}.profrow .fill{background:#7926d4}.profrow.invalue .fill{background:#a340ed}.profrow.poc .fill{background:#e3b84e}body.fullscreen .canvasbox{height:calc(100vh - 185px)}
