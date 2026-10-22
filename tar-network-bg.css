@@ -1,6 +1,6 @@
-/* TAR Quant Engine Ambient Background v2 */
+/* TAR Quant Engine v3 */
 html{background:#05070b}
 body.tar-network-enabled{background:transparent!important;isolation:isolate}
-#tar-network-background{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block;opacity:.94}
-@media(max-width:720px){#tar-network-background{opacity:.67}}
-@media(prefers-reduced-motion:reduce){#tar-network-background{opacity:.6}}
+#tar-network-background{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block;opacity:.98}
+@media(max-width:720px){#tar-network-background{opacity:.72}}
+@media(prefers-reduced-motion:reduce){#tar-network-background{opacity:.62}}
