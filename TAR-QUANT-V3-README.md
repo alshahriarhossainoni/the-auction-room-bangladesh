@@ -1,0 +1,1 @@
+TAR Institutional Quant v3 — Full website package. COT page redesigned with research sidebar, 3D orb, analytical charts and positioning range using existing CFTC data. No invented live prices. All original files preserved. Upload all files to repository root. Hard refresh.

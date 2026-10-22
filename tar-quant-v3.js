@@ -1,0 +1,11 @@
+(()=>{'use strict';
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+function plot(id,points,type){const el=document.getElementById(id);if(!el)return;const r=el.getBoundingClientRect(),w=Math.max(200,r.width),h=Math.max(100,r.height),d=Math.min(devicePixelRatio||1,2);el.width=w*d;el.height=h*d;const c=el.getContext('2d');c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,w,h);const L=12,R=8,T=16,B=25,pw=w-L-R,ph=h-T-B;
+c.strokeStyle='#6d9fb121';c.lineWidth=1;for(let i=0;i<5;i++){const y=T+i*ph/4;c.beginPath();c.moveTo(L,y);c.lineTo(w-R,y);c.stroke()}
+const vals=points.map(p=>type==='delta'?p.net:p.long+p.short),max=Math.max(1,...vals.map(Math.abs));const step=pw/points.length;
+points.forEach((p,i)=>{const x=L+i*step+step*.12,bw=Math.max(1,step*.76);if(type==='delta'){const v=i? p.net-points[i-1].net:0;const scale=Math.max(1,...points.slice(1).map((q,j)=>Math.abs(q.net-points[j].net)));const zero=T+ph/2;const hh=Math.abs(v)/scale*(ph*.43);c.fillStyle=v>=0?'#30cf9a':'#f16c79';c.fillRect(x,v>=0?zero-hh:zero,bw,Math.max(1,hh))}else{const lh=p.long/max*ph,sh=p.short/max*ph;c.fillStyle='#27cfa2';c.fillRect(x,T+ph-lh,bw,lh);c.fillStyle='#f06d7a';c.fillRect(x,T+ph-lh-sh,bw,sh)}});
+c.fillStyle='#7794a4';c.font='10px Inter,sans-serif';[0,Math.floor((points.length-1)/2),points.length-1].forEach(i=>{c.fillText((points[i].date||points[i].label||'').slice(5,10),Math.min(w-38,L+i*step),h-6)});
+}
+let latest=null;function render(){if(!latest)return;const pts=latest.points||[];if(pts.length<2)return;plot('tarLongShort',pts,'stack');plot('tarNetChange',pts,'delta');const vals=pts.map(p=>p.net),lo=Math.min(...vals),hi=Math.max(...vals),now=latest.latest.net,percent=hi===lo?50:(now-lo)/(hi-lo)*100;const $=id=>document.getElementById(id);$('tarRangeValue').textContent=(now>=0?'+':'')+fmt(now)+' contracts';$('tarRangeLow').textContent=fmt(lo)+' LOW';$('tarRangeHigh').textContent=fmt(hi)+' HIGH';$('tarRangeMarker').style.left=Math.max(0,Math.min(100,percent))+'%';$('tarPercentile').textContent=Math.round(percent)+'% of observed range';const diff=now-latest.previous.net;$('tarWeeklyChange').textContent=(diff>=0?'+':'')+fmt(diff);$('tarWeeklyChange').style.color=diff>=0?'#43d7a4':'#fa7a86';}
+document.addEventListener('tar:cot-ready',e=>{latest=e.detail;render()});window.addEventListener('resize',()=>{if(latest)render()});
+})();

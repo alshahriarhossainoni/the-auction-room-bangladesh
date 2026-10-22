@@ -183,6 +183,7 @@
     setSignal('signalThree', l.net > p3.net ? 'Accumulation' : l.net < p3.net ? 'Distribution' : 'Flat', l.net - p3.net);
     setSignal('signalSix', l.net > p6.net ? 'Net long structure rising' : l.net < p6.net ? 'Net long structure falling' : 'Balanced', l.net - p6.net);
     document.getElementById('chartRangeLabel').textContent = `Latest ${pts.length} reports`;
+    document.dispatchEvent(new CustomEvent('tar:cot-ready',{detail:{points:data.points,latest:data.latest,previous:data.previous,reportDate:data.reportDate}}));
   }
 
   function setSignal(id, text, direction) {
