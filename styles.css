@@ -2166,3 +2166,9 @@ body > footer:not(.pro-footer){
 @keyframes qp-led{50%{opacity:.25;box-shadow:0 0 2px #54e7bd}}
 @media(max-width:650px){#tar-quant-profile{height:160px}.qp-top{font-size:8px}.qp-demo{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.qp-led{animation:none}}
+
+/* Quant Profile v5 */
+.quant-profile{background:radial-gradient(ellipse at 25% 55%,rgba(22,61,105,.18),transparent 65%),radial-gradient(ellipse at 88% 36%,rgba(9,87,77,.11),transparent 60%),#080c12}
+.qp-demo{font-size:8px;color:#d3b36c;letter-spacing:.08em;font-weight:700}
+#tar-quant-profile{height:218px;margin:7px 0 8px}
+@media(max-width:650px){#tar-quant-profile{height:178px}}
