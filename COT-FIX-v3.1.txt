@@ -1,0 +1,1 @@
+COT Positioning Range fix: publish latest CFTC/Cached data for dashboard, support late initialization, isolate chart rendering errors. Existing data is not replaced with fabricated figures.
