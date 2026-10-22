@@ -1,0 +1,43 @@
+/* TAR Institutional Quant Edition v2 — layout redesign, not merely an overlay */
+:root{--tar-ink:#070c12;--tar-cream:#e7e9e6;--tar-metal:#d8b978;--tar-cyan:#70d5c8}
+body{background:#060a10!important;color:#e8edf2;font-family:'Space Grotesk',Inter,Arial,sans-serif!important}
+body::before{background-size:44px 44px!important;opacity:.45}
+.topbar{background:#101924!important;border-bottom:1px solid #243241!important}.topbar-inner{max-width:1450px!important;letter-spacing:.24em!important;font-size:10px!important}
+.site-header{max-width:1450px!important;border-radius:4px!important;background:rgba(7,13,22,.93)!important;border:1px solid rgba(160,190,201,.18)!important;box-shadow:0 22px 60px #0006!important}
+.site-header .brand img{filter:drop-shadow(0 0 9px #d9b86c30)}
+.nav-links a{font-size:12px!important;letter-spacing:.02em!important}.nav-cta{border-radius:3px!important;background:linear-gradient(125deg,#e6c67d,#b38d45)!important;color:#071017!important}
+.hero{max-width:1450px!important;min-height:820px!important;grid-template-columns:minmax(0,1.16fr) minmax(350px,.84fr)!important;gap:clamp(32px,5vw,96px)!important;align-items:center!important;padding-top:95px!important;padding-bottom:100px!important;position:relative!important}
+.hero:before{content:'TAR / QUANT RESEARCH';position:absolute;left:0;top:32px;font-size:10px;letter-spacing:.28em;color:#8d9fac;border-top:1px solid #2b4352;padding-top:13px;width:100%;pointer-events:none}
+.hero-copy{position:relative;padding:24px 0 26px 26px;border-left:2px solid rgba(215,182,107,.56)}
+.tar-system-index{display:flex;gap:12px;align-items:center;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.25em;color:#d4b46c;margin-bottom:36px}.tar-system-index>span:last-child{color:#65798a}.tar-system-led,.tar-visual-header i{display:inline-block;width:7px;height:7px;background:#60e6bb;border-radius:50%;box-shadow:0 0 14px #60e6bb}
+.tar-kicker{font-size:10px!important;letter-spacing:.22em!important;color:#c1ccd4!important}
+.hero .eyebrow{max-width:540px!important;color:#78d4c8!important;letter-spacing:.16em!important;font-size:11px!important;line-height:1.9!important}
+.hero h1{font-family:'Space Grotesk',Inter,sans-serif!important;font-weight:650!important;font-size:clamp(4.3rem,7.2vw,8.3rem)!important;line-height:.92!important;letter-spacing:-.083em!important;margin:26px 0!important;color:#f2f0e9!important;text-wrap:balance}
+.hero h1 span:last-child{color:#d4b36e!important}
+.hero-text{font-size:clamp(15px,1.2vw,18px)!important;line-height:1.8!important;color:#aebdc9!important;max-width:570px!important}
+.tar-hero-signature{display:flex;flex-wrap:wrap;gap:8px;margin:25px 0 22px}.tar-hero-signature span{font-size:9px;letter-spacing:.12em;color:#a9c5c9;border:1px solid #2d454c;background:#0b1920;padding:9px 10px}
+.hero-actions .btn{border-radius:3px!important;padding:16px 24px!important;letter-spacing:.04em!important}
+.trust-row{border-top:1px solid #30414a!important;padding-top:23px!important;margin-top:34px!important;gap:14px!important}.trust-row>div{border:0!important}.trust-row strong{font-family:'Space Grotesk',sans-serif!important;font-size:24px!important;color:#d7bb7b!important}
+.hero-visual{position:relative!important;display:grid!important;gap:16px!important;padding:0 0 0 16px!important;border-left:1px solid #31454d!important;transform:none!important}
+.tar-visual-header{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:9px;letter-spacing:.13em;color:#b3c4ce;padding:0 0 7px}.tar-visual-header span:last-child{color:#7edac1;white-space:nowrap}.tar-visual-header i{width:5px;height:5px;margin-right:5px}
+.portrait-wrap{border-radius:3px!important;min-height:330px!important;max-height:440px!important;box-shadow:20px 20px 0 #0e1b24,21px 21px 0 #35505b!important;border-color:#45515b!important}
+.portrait-wrap img{filter:grayscale(1) contrast(1.1)!important}
+.portrait-label{background:linear-gradient(transparent,#05090eea)!important}
+.market-card{border-radius:3px!important;border-color:#3b4a52!important;background:#08121c!important;box-shadow:0 18px 55px #0007!important}
+.market-card-head{background:#101c29!important;letter-spacing:.06em!important}
+.quant-profile{background:#081019!important}
+.tar-research{max-width:1450px!important;margin:30px auto 100px!important;padding-top:38px!important;border-top:1px solid #415361!important}
+.tar-research-head h2,.tar-institutional-band h2{font-family:'Space Grotesk',sans-serif!important;font-weight:600!important;letter-spacing:-.065em!important;line-height:1.08!important}
+.tar-research-head h2{font-size:clamp(2.6rem,4.5vw,5rem)!important}
+.tar-research-grid{gap:1px!important;background:#30414b!important;border:1px solid #30414b!important}
+.tar-lab{border:0!important;border-radius:0!important;background:#0a141e!important;min-height:310px!important;padding:28px!important;transition:background .3s,transform .3s!important}
+.tar-lab:hover{background:#142332!important;transform:translateY(-4px)!important;z-index:1}
+.tar-lab h3{font-family:'Space Grotesk',sans-serif!important;font-weight:550!important;font-size:clamp(1.5rem,2vw,2.1rem)!important;letter-spacing:-.04em!important}
+.tar-lab-no{font-size:10px!important;letter-spacing:.2em!important;color:#79d5c5!important}
+.tar-institutional-band{max-width:1450px!important;border-radius:2px!important;background:linear-gradient(120deg,#152534,#0b1019 70%)!important;padding:60px!important;border:1px solid #31434e!important}
+.tar-institutional-band h2{font-size:clamp(2.8rem,4.5vw,5.5rem)!important}
+.section,.section-wrap{max-width:1450px!important}
+.btn,.feature-card,.path-card,.course-card,.premium-card{border-radius:4px!important}
+@media(max-width:1100px){.hero{grid-template-columns:1fr!important;min-height:0!important;padding:65px 20px!important}.hero h1{font-size:clamp(4rem,10vw,7rem)!important}.hero-visual{max-width:650px!important;width:100%!important;margin:auto!important}.hero-copy{padding-left:18px!important}}
+@media(max-width:600px){.hero{padding:48px 16px 65px!important}.hero h1{font-size:clamp(3.3rem,13vw,5.2rem)!important}.tar-hero-signature span{font-size:8px;padding:7px}.tar-visual-header{font-size:8px}.tar-research{padding:0 16px!important}.tar-research-grid{grid-template-columns:1fr!important}.tar-institutional-band{margin:25px 16px!important;padding:28px!important}.portrait-wrap{min-height:300px!important}}
+@media(prefers-reduced-motion:reduce){.tar-lab{transition:none!important}.tar-lab:hover{transform:none!important}}
