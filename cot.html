@@ -1,188 +1,176 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="TAR Bangladesh COT Intelligence — automatically synced Gold managed-money positioning from CFTC." />
-  <meta name="theme-color" content="#070706" />
-  <title>COT Intelligence | The Auction Room Bangladesh</title>
-  <link rel="icon" href="logo.jpg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20" />
-  <link rel="stylesheet" href="cot.css?v=8" />
-<link rel="stylesheet" href="tar-network-bg.css?v=3">
-<link rel="stylesheet" href="tar-institutional.css?v=1" />
-<link rel="stylesheet" href="tar-redesign-v2.css?v=2" />
-<link rel="stylesheet" href="tar-quant-v3.css?v=3" />
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+<meta content="#070706" name="theme-color"/>
+<title>Gold COT Intelligence Dashboard | TAR Bangladesh</title>
+<link href="logo.jpg" rel="icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Playfair+Display:wght@600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css?v=20" rel="stylesheet"/>
+<link href="cot.css?v=8" rel="stylesheet"/>
+<link href="tar-network-bg.css?v=3" rel="stylesheet"/>
+<link href="tar-institutional.css?v=1" rel="stylesheet">
+<link href="tar-redesign-v2.css?v=2" rel="stylesheet"/>
+<link href="tar-quant-v3.css?v=3" rel="stylesheet"/>
+</link><meta content="Explore CFTC Commitments of Traders positioning, managed money long and short contracts, and historical gold futures context." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><meta content="website" property="og:type"/><meta content="Gold COT Intelligence Dashboard | TAR Bangladesh" property="og:title"/><meta content="Explore CFTC Commitments of Traders positioning, managed money long and short contracts, and historical gold futures context." property="og:description"/><meta content="https://theauctionroombd.com/cot.html" property="og:url"/><meta content="https://theauctionroombd.com/logo.jpg" property="og:image"/><meta content="summary" name="twitter:card"/><meta content="Gold COT Intelligence Dashboard | TAR Bangladesh" name="twitter:title"/><meta content="Explore CFTC Commitments of Traders positioning, managed money long and short contracts, and historical gold futures context." name="twitter:description"/><link href="https://theauctionroombd.com/cot.html" rel="canonical"/></head>
 <body class="cot-page">
-  <div class="noise" aria-hidden="true"></div>
-
-  <div class="topbar">
-    <div class="topbar-inner">
-      <span>Professional Trading Education</span>
-      <a href="premium.html">Explore Premium Batch ↗</a>
-    </div>
-  </div>
-
-  <header class="site-header cot-site-header">
-    <a class="brand" href="index.html" aria-label="The Auction Room Bangladesh home">
-      <img src="logo.jpg" alt="The Auction Room Bangladesh logo" />
-      <div><strong>The Auction Room</strong><span>Bangladesh</span></div>
-    </a>
-    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
-    <nav class="nav-links" aria-label="Primary navigation">
-      <a href="index.html#about">About</a>
-      <a href="courses.html">Free Course</a>
-      <a href="premium.html">Premium</a>
-      <a href="index.html#terminal">Terminal</a>
-      <a class="active-page" href="cot.html">COT Intelligence</a>
-      <a href="index.html#copy-trading">Copy Trading</a>
-      <div class="nav-tools">
-        <a class="auth-link login-link" href="login.html">Log In</a>
-        <a class="auth-link signup-link" href="signup.html">Sign Up</a>
-      </div>
-    </nav>
-  </header>
-
-  <aside class="tar-research-sidebar" aria-label="Research navigation">
-  <div class="tar-sidebar-label">RESEARCH TERMINAL <span class="tar-online-dot"></span></div>
-  <a href="index.html">⌂ <span>Market Overview</span></a>
-  <a href="cot.html" class="selected">◈ <span>COT Intelligence</span></a>
-  <a href="index.html#terminal">▤ <span>Order Flow Research</span></a>
-  <a href="index.html#terminal">⬡ <span>QuantFlow Terminal</span></a>
-  <a href="courses.html">◫ <span>AMT Curriculum</span></a>
-  <a href="premium.html">✦ <span>Premium Research</span></a>
-  <div class="tar-sidebar-foot">TAR / QUANT INTELLIGENCE<br><small>Research & Education</small></div>
+<div aria-hidden="true" class="noise"></div>
+<div class="topbar">
+<div class="topbar-inner">
+<span>Professional Trading Education</span>
+<a href="premium.html">Explore Premium Batch ↗</a>
+</div>
+</div>
+<header class="site-header cot-site-header">
+<a aria-label="The Auction Room Bangladesh home" class="brand" href="index.html">
+<img alt="The Auction Room Bangladesh logo" src="logo.jpg"/>
+<div><strong>The Auction Room</strong><span>Bangladesh</span></div>
+</a>
+<button aria-expanded="false" aria-label="Open menu" class="menu-toggle">☰</button>
+<nav aria-label="Primary navigation" class="nav-links">
+<a href="index.html#about">About</a>
+<a href="courses.html">Free Course</a>
+<a href="premium.html">Premium</a>
+<a href="index.html#terminal">Terminal</a>
+<a class="active-page" href="cot.html">COT Intelligence</a>
+<a href="index.html#copy-trading">Copy Trading</a>
+<div class="nav-tools">
+<a class="auth-link login-link" href="login.html">Log In</a>
+<a class="auth-link signup-link" href="signup.html">Sign Up</a>
+</div>
+</nav>
+</header>
+<aside aria-label="Research navigation" class="tar-research-sidebar">
+<div class="tar-sidebar-label">RESEARCH TERMINAL <span class="tar-online-dot"></span></div>
+<a href="index.html">⌂ <span>Market Overview</span></a>
+<a class="selected" href="cot.html">◈ <span>COT Intelligence</span></a>
+<a href="index.html#terminal">▤ <span>Order Flow Research</span></a>
+<a href="index.html#terminal">⬡ <span>QuantFlow Terminal</span></a>
+<a href="courses.html">◫ <span>AMT Curriculum</span></a>
+<a href="premium.html">✦ <span>Premium Research</span></a>
+<div class="tar-sidebar-foot">TAR / QUANT INTELLIGENCE<br/><small>Research &amp; Education</small></div>
 </aside>
 <main class="cot-main tar-terminal-main">
-  <div class="tar-breadcrumb">RESEARCH <span>/</span> COT INTELLIGENCE <span>/</span> COMEX GOLD <b>DATA: WEEKLY CFTC</b></div>
-    <div class="cot-toolbar">
-      <a class="cot-back" href="index.html">← Back to TAR Home</a>
-      <div class="cot-sync">
-        <span id="cotSourceDot" class="source-dot loading"></span>
-        <span id="cotSourceStatus">Connecting to CFTC…</span>
-        <button id="refreshCot" type="button">Refresh</button>
-      </div>
-    </div>
-
-    <section class="tar-quant-banner" aria-label="Institutional research overview"><div class="tar-banner-copy"><span>THE AUCTION ROOM / INSTITUTIONAL RESEARCH</span><strong>Market positioning.<br><em>Beyond the price.</em></strong><p>Evidence-led market context · Auction Theory · Order Flow · Quantitative Research</p></div><div class="tar-orb" aria-hidden="true"><div class="tar-orb-inner"></div><div class="tar-orb-ring"></div></div></section>
-    <section class="cot-hero-card">
-      <div class="cot-symbol-wrap">
-        <div class="cot-symbol" aria-label="Gold bullion">
-          <svg class="cot-bullion-icon" viewBox="0 0 64 64" aria-hidden="true">
-            <path d="M12 37h20l-4 13H8l4-13Zm24 0h20l-4 13H32l4-13ZM25 18h20l-4 13H21l4-13Z" fill="currentColor"/>
-            <path d="M12 37l4-5h20l-4 5H12Zm24 0 4-5h20l-4 5H36Zm-11-19 4-5h20l-4 5H25Z" fill="currentColor" opacity=".55"/>
-          </svg>
-        </div>
-        <div>
-          <p class="eyebrow">TAR Smart Money Monitor</p>
-          <h1>XAUUSD <span>Gold</span></h1>
-          <p id="cotReportDate">Loading latest COT report…</p>
-        </div>
-      </div>
-      <div class="cot-score-wrap">
-        <small>3-report momentum</small>
-        <strong id="cotScore">—</strong>
-        <span id="cotBias" class="cot-bias neutral">Loading</span>
-      </div>
-    </section>
-
-    <div class="tar-micro-tape"><span>COMEX GOLD</span><span>MANAGED MONEY</span><span>DISAGGREGATED FUTURES ONLY</span><span>WEEKLY REPORTING</span><span>CFTC SOURCE</span></div>
-    <section class="cot-insight-card">
-      <div>
-        <p class="eyebrow">What positioning is doing</p>
-        <h2>Managed Money Positioning</h2>
-        <p>This page automatically reads the CFTC Disaggregated Futures Only report for Gold. It compares managed-money long and short positions across recent weekly reports.</p>
-      </div>
-      <div class="cot-change-line">
-        <span>Gold</span>
-        <div><b id="prevNet">—</b><i>→</i><strong id="latestNetInline">—</strong><em id="trendBadge" class="trend-badge neutral">Loading CFTC data…</em></div>
-      </div>
-    </section>
-
-    <section class="cot-panel">
-      <div class="cot-panel-head">
-        <div><p class="eyebrow">Commitment of Traders</p><h2>Gold managed-money positioning</h2></div>
-        <div class="cot-toggle" role="group" aria-label="Chart metric">
-          <button class="active" data-series="net">Net</button>
-          <button data-series="long">Long</button>
-          <button data-series="short">Short</button>
-        </div>
-      </div>
-
-      <div class="cot-stats">
-        <div><span>NET</span><strong id="netValue">—</strong><small id="netDelta">—</small></div>
-        <div><span>LONG</span><strong id="longValue">—</strong><small id="longDelta">—</small></div>
-        <div><span>SHORT</span><strong id="shortValue">—</strong><small id="shortDelta">—</small></div>
-      </div>
-
-      <div class="cot-chart-shell">
-        <div class="chart-topline">
-          <span id="chartLabel">Net positioning</span>
-          <small id="chartRangeLabel">Latest 52 reports</small>
-        </div>
-        <canvas id="cotChart" width="1200" height="420" aria-label="COT positioning chart"></canvas>
-        <div id="cotTooltip" class="cot-tooltip" hidden></div>
-      </div>
-    </section>
-
-    <section class="tar-quant-analytics" aria-label="Additional COT analytics">
- <article class="tar-quant-panel"><div class="tar-panel-kicker">POSITIONING DISTRIBUTION <span>LAST 52 REPORTS</span></div><h3>Long vs Short Contracts</h3><canvas id="tarLongShort" aria-label="Historical long and short positioning"></canvas></article>
- <article class="tar-quant-panel"><div class="tar-panel-kicker">POSITIONING VELOCITY <span>WEEK OVER WEEK</span></div><h3>Net Position Change</h3><canvas id="tarNetChange" aria-label="Weekly net position changes"></canvas></article>
- <article class="tar-quant-panel tar-quant-range"><div class="tar-panel-kicker">QUANT CONTEXT <span>52-WEEK SAMPLE</span></div><h3>Positioning Range</h3><div class="tar-range-value" id="tarRangeValue">Awaiting data</div><div class="tar-range-track"><i id="tarRangeMarker"></i></div><div class="tar-range-limits"><span id="tarRangeLow">—</span><span id="tarRangeHigh">—</span></div><div class="tar-percentile"><span>Sample percentile</span><strong id="tarPercentile">—</strong></div><div class="tar-percentile"><span>Weekly net change</span><strong id="tarWeeklyChange">—</strong></div><p class="tar-range-note">Historical positioning context, not a price-direction forecast.</p></article>
+<div class="tar-breadcrumb">RESEARCH <span>/</span> COT INTELLIGENCE <span>/</span> COMEX GOLD <b>DATA: WEEKLY CFTC</b></div>
+<div class="cot-toolbar">
+<a class="cot-back" href="index.html">← Back to TAR Home</a>
+<div class="cot-sync">
+<span class="source-dot loading" id="cotSourceDot"></span>
+<span id="cotSourceStatus">Connecting to CFTC…</span>
+<button id="refreshCot" type="button">Refresh</button>
+</div>
+</div>
+<section aria-label="Institutional research overview" class="tar-quant-banner"><div class="tar-banner-copy"><span>THE AUCTION ROOM / INSTITUTIONAL RESEARCH</span><strong>Market positioning.<br/><em>Beyond the price.</em></strong><p>Evidence-led market context · Auction Theory · Order Flow · Quantitative Research</p></div><div aria-hidden="true" class="tar-orb"><div class="tar-orb-inner"></div><div class="tar-orb-ring"></div></div></section>
+<section class="cot-hero-card">
+<div class="cot-symbol-wrap">
+<div aria-label="Gold bullion" class="cot-symbol">
+<svg aria-hidden="true" class="cot-bullion-icon" viewbox="0 0 64 64">
+<path d="M12 37h20l-4 13H8l4-13Zm24 0h20l-4 13H32l4-13ZM25 18h20l-4 13H21l4-13Z" fill="currentColor"></path>
+<path d="M12 37l4-5h20l-4 5H12Zm24 0 4-5h20l-4 5H36Zm-11-19 4-5h20l-4 5H25Z" fill="currentColor" opacity=".55"></path>
+</svg>
+</div>
+<div>
+<p class="eyebrow">TAR Smart Money Monitor</p>
+<h1>XAUUSD <span>Gold</span></h1>
+<p id="cotReportDate">Loading latest COT report…</p>
+</div>
+</div>
+<div class="cot-score-wrap">
+<small>3-report momentum</small>
+<strong id="cotScore">—</strong>
+<span class="cot-bias neutral" id="cotBias">Loading</span>
+</div>
 </section>
-    <section class="cot-bottom-grid">
-      <article class="cot-small-card">
-        <p class="eyebrow">Signal Components</p>
-        <h3>COT positioning trend</h3>
-        <div class="signal-row"><span>Last report</span><strong id="signalOne">—</strong></div>
-        <div class="signal-row"><span>Last 3 reports</span><strong id="signalThree">—</strong></div>
-        <div class="signal-row"><span>6-report structure</span><strong id="signalSix">—</strong></div>
-        <p class="muted">COT is a higher-timeframe positioning input. Use it with Auction Market Theory, location, Order Flow and execution confirmation.</p>
-      </article>
-
-      <article class="cot-small-card">
-        <p class="eyebrow">TAR Interpretation</p>
-        <h3>How to read this page</h3>
-        <ul class="cot-guide">
-          <li><b>Net rising:</b> managed money is becoming more net long.</li>
-          <li><b>Long rising:</b> managed-money long exposure is increasing.</li>
-          <li><b>Short rising:</b> managed-money short exposure is increasing.</li>
-          <li><b>Weekly context:</b> COT is not an intraday entry signal.</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="cot-note">
-      <div>
-        <span>Automatic CFTC Sync</span>
-        <p id="cotLastSync">Waiting for data…</p>
-      </div>
-      <p>COT data is weekly and delayed. The report reflects Tuesday positions and is normally published Friday. Nothing on this dashboard constitutes financial advice or guarantees future results.</p>
-      <a href="https://publicreporting.cftc.gov/stories/s/Disaggregated-Futures-Only/ubmb-6exi/" target="_blank" rel="noopener noreferrer">Official CFTC source ↗</a>
-    </section>
-  </main>
-
-  <footer class="pro-footer cot-footer">
-    <div class="section-wrap">
-      <div class="pro-footer-top">
-        <div class="pro-footer-brand"><img src="logo.jpg" alt="TAR Bangladesh logo"><div><strong>The Auction Room Bangladesh</strong><span>Auction • Order Flow • Smart Money</span></div></div>
-        <div class="pro-footer-links"><a href="index.html">Home</a><a href="courses.html">Free Course</a><a href="premium.html">Premium</a><a href="index.html#contact">Contact</a></div>
-      </div>
-      <p class="pro-footer-copy">TAR Bangladesh provides educational market context for learning and research. Positioning data should be combined with your own analysis and risk management.</p>
-      <div class="pro-footer-bottom"><span>© 2026 The Auction Room Bangladesh. All rights reserved.</span><div><a href="mailto:theauctionroombangladesh@gmail.com">Email</a></div></div>
-    </div>
-  </footer>
-
-  <script src="tar-quant-v3.js?v=31"></script>
-  <script src="cot-live.js?v=31"></script>
-  <script src="script.js?v=4"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
-  <script src="auth-state.js"></script>
-<script defer src="tar-network-bg.js?v=3"></script>
+<div class="tar-micro-tape"><span>COMEX GOLD</span><span>MANAGED MONEY</span><span>DISAGGREGATED FUTURES ONLY</span><span>WEEKLY REPORTING</span><span>CFTC SOURCE</span></div>
+<section class="cot-insight-card">
+<div>
+<p class="eyebrow">What positioning is doing</p>
+<h2>Managed Money Positioning</h2>
+<p>This page automatically reads the CFTC Disaggregated Futures Only report for Gold. It compares managed-money long and short positions across recent weekly reports.</p>
+</div>
+<div class="cot-change-line">
+<span>Gold</span>
+<div><b id="prevNet">—</b><i>→</i><strong id="latestNetInline">—</strong><em class="trend-badge neutral" id="trendBadge">Loading CFTC data…</em></div>
+</div>
+</section>
+<section class="cot-panel">
+<div class="cot-panel-head">
+<div><p class="eyebrow">Commitment of Traders</p><h2>Gold managed-money positioning</h2></div>
+<div aria-label="Chart metric" class="cot-toggle" role="group">
+<button class="active" data-series="net">Net</button>
+<button data-series="long">Long</button>
+<button data-series="short">Short</button>
+</div>
+</div>
+<div class="cot-stats">
+<div><span>NET</span><strong id="netValue">—</strong><small id="netDelta">—</small></div>
+<div><span>LONG</span><strong id="longValue">—</strong><small id="longDelta">—</small></div>
+<div><span>SHORT</span><strong id="shortValue">—</strong><small id="shortDelta">—</small></div>
+</div>
+<div class="cot-chart-shell">
+<div class="chart-topline">
+<span id="chartLabel">Net positioning</span>
+<small id="chartRangeLabel">Latest 52 reports</small>
+</div>
+<canvas aria-label="COT positioning chart" height="420" id="cotChart" width="1200"></canvas>
+<div class="cot-tooltip" hidden="" id="cotTooltip"></div>
+</div>
+</section>
+<section aria-label="Additional COT analytics" class="tar-quant-analytics">
+<article class="tar-quant-panel"><div class="tar-panel-kicker">POSITIONING DISTRIBUTION <span>LAST 52 REPORTS</span></div><h3>Long vs Short Contracts</h3><canvas aria-label="Historical long and short positioning" id="tarLongShort"></canvas></article>
+<article class="tar-quant-panel"><div class="tar-panel-kicker">POSITIONING VELOCITY <span>WEEK OVER WEEK</span></div><h3>Net Position Change</h3><canvas aria-label="Weekly net position changes" id="tarNetChange"></canvas></article>
+<article class="tar-quant-panel tar-quant-range"><div class="tar-panel-kicker">QUANT CONTEXT <span>52-WEEK SAMPLE</span></div><h3>Positioning Range</h3><div class="tar-range-value" id="tarRangeValue">Awaiting data</div><div class="tar-range-track"><i id="tarRangeMarker"></i></div><div class="tar-range-limits"><span id="tarRangeLow">—</span><span id="tarRangeHigh">—</span></div><div class="tar-percentile"><span>Sample percentile</span><strong id="tarPercentile">—</strong></div><div class="tar-percentile"><span>Weekly net change</span><strong id="tarWeeklyChange">—</strong></div><p class="tar-range-note">Historical positioning context, not a price-direction forecast.</p></article>
+</section>
+<section class="cot-bottom-grid">
+<article class="cot-small-card">
+<p class="eyebrow">Signal Components</p>
+<h3>COT positioning trend</h3>
+<div class="signal-row"><span>Last report</span><strong id="signalOne">—</strong></div>
+<div class="signal-row"><span>Last 3 reports</span><strong id="signalThree">—</strong></div>
+<div class="signal-row"><span>6-report structure</span><strong id="signalSix">—</strong></div>
+<p class="muted">COT is a higher-timeframe positioning input. Use it with Auction Market Theory, location, Order Flow and execution confirmation.</p>
+</article>
+<article class="cot-small-card">
+<p class="eyebrow">TAR Interpretation</p>
+<h3>How to read this page</h3>
+<ul class="cot-guide">
+<li><b>Net rising:</b> managed money is becoming more net long.</li>
+<li><b>Long rising:</b> managed-money long exposure is increasing.</li>
+<li><b>Short rising:</b> managed-money short exposure is increasing.</li>
+<li><b>Weekly context:</b> COT is not an intraday entry signal.</li>
+</ul>
+</article>
+</section>
+<section class="cot-note">
+<div>
+<span>Automatic CFTC Sync</span>
+<p id="cotLastSync">Waiting for data…</p>
+</div>
+<p>COT data is weekly and delayed. The report reflects Tuesday positions and is normally published Friday. Nothing on this dashboard constitutes financial advice or guarantees future results.</p>
+<a href="https://publicreporting.cftc.gov/stories/s/Disaggregated-Futures-Only/ubmb-6exi/" rel="noopener noreferrer" target="_blank">Official CFTC source ↗</a>
+</section>
+</main>
+<footer class="pro-footer cot-footer">
+<div class="section-wrap">
+<div class="pro-footer-top">
+<div class="pro-footer-brand"><img alt="TAR Bangladesh logo" src="logo.jpg"/><div><strong>The Auction Room Bangladesh</strong><span>Auction • Order Flow • Smart Money</span></div></div>
+<div class="pro-footer-links"><a href="index.html">Home</a><a href="courses.html">Free Course</a><a href="premium.html">Premium</a><a href="index.html#contact">Contact</a></div>
+</div>
+<p class="pro-footer-copy">TAR Bangladesh provides educational market context for learning and research. Positioning data should be combined with your own analysis and risk management.</p>
+<div class="pro-footer-bottom"><span>© 2026 The Auction Room Bangladesh. All rights reserved.</span><div><a href="mailto:theauctionroombangladesh@gmail.com">Email</a></div></div>
+</div>
+</footer>
+<script src="tar-quant-v3.js?v=31"></script>
+<script src="cot-live.js?v=31"></script>
+<script src="script.js?v=4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="auth-state.js"></script>
+<script defer="" src="tar-network-bg.js?v=3"></script>
 </body>
 </html>
