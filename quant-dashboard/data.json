@@ -1,0 +1,71 @@
+{
+  "status": "demo",
+  "as_of": "ILLUSTRATIVE ONLY — NOT A MARKET DATE",
+  "source": "SYNTHETIC EXAMPLE DATA — NOT CME",
+  "reference_price": null,
+  "monthly": {
+    "net_gex": null,
+    "net_dex": null,
+    "zero_gamma": null,
+    "call_resistance": null,
+    "call_wall_3": null,
+    "call_wall_2": null,
+    "call_wall_1": null,
+    "put_wall_3": null,
+    "put_wall_2": null,
+    "put_wall_1": null,
+    "put_support": null,
+    "iv": {
+      "atm": null,
+      "put25": null,
+      "call25": null,
+      "skew": null
+    }
+  },
+  "odte": {
+    "iv": {
+      "atm": null,
+      "put25": null,
+      "call25": null,
+      "skew": null
+    }
+  },
+  "surface": {
+    "strikes": [
+      3700,
+      3800,
+      3900,
+      4000,
+      4100
+    ],
+    "expiries": [
+      "Expiry A",
+      "Expiry B",
+      "Expiry C"
+    ],
+    "iv": [
+      [
+        25,
+        23,
+        22,
+        23,
+        26
+      ],
+      [
+        24,
+        22,
+        21,
+        22,
+        25
+      ],
+      [
+        23,
+        21,
+        20,
+        21,
+        24
+      ]
+    ]
+  },
+  "gamma_by_strike": []
+}
