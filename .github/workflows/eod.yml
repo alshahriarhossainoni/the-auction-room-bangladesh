@@ -3,8 +3,10 @@ name: TAR QuantFlow Daily EOD
 
 on:
   workflow_dispatch:
+
   schedule:
-    - cron: "30 20 * * 1-5"
+    # Every weekday at 23:30 UTC
+    - cron: "30 23 * * 1-5"
 
 permissions:
   contents: read
@@ -24,9 +26,11 @@ jobs:
 
       - name: Check authorized EOD input
         id: input_check
+        shell: bash
         run: |
           if [ -f input/chain.csv ]; then
             echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "Authorized EOD chain file found."
           else
             echo "available=false" >> "$GITHUB_OUTPUT"
             echo "No authorized EOD chain available."
@@ -37,12 +41,20 @@ jobs:
         run: |
           mkdir -p output
           python backend/calculate.py \
-            --input input/chain.csv \
-            --output output/eod.json
+            input/chain.csv \
+            output/eod.json
+
+      - name: Validate calculation output
+        if: steps.input_check.outputs.available == 'true'
+        run: |
+          python -m json.tool output/eod.json > /dev/null
+          echo "EOD calculation JSON validated."
 
       - name: Upload calculation artifact
         if: steps.input_check.outputs.available == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: tar-eod-output
+          name: tar-quantflow-eod
           path: output/eod.json
+          if-no-files-found: error
+          retention-days: 30
