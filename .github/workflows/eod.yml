@@ -1,0 +1,48 @@
+
+name: TAR QuantFlow Daily EOD
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 20 * * 1-5"
+
+permissions:
+  contents: read
+
+jobs:
+  calculate-eod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check authorized EOD input
+        id: input_check
+        run: |
+          if [ -f input/chain.csv ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "No authorized EOD chain available."
+          fi
+
+      - name: Run GEX DEX calculation
+        if: steps.input_check.outputs.available == 'true'
+        run: |
+          mkdir -p output
+          python backend/calculate.py \
+            --input input/chain.csv \
+            --output output/eod.json
+
+      - name: Upload calculation artifact
+        if: steps.input_check.outputs.available == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tar-eod-output
+          path: output/eod.json
